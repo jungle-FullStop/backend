@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
+
 // import { FriendStatus } from 'src/friends/entity/friendStatus';
 
 class RelationDto {
