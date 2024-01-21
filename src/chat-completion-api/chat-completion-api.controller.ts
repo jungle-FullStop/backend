@@ -1,4 +1,11 @@
-import { Body, Controller, Post, ValidationPipe, Get, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  ValidationPipe,
+  Get,
+  Param,
+} from '@nestjs/common';
 import { ChatCompletionApiService } from './chat-completion-api.service';
 import { GetChatCompletionAnswerInputDTO } from './model/chat-completion-answer.dto';
 
