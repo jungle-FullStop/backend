@@ -4,7 +4,7 @@ import { UsersService } from './users.service';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 // import { GetUserResponseDto } from './dto/user.dto';
 import { User } from './utils/user.decorator';
-import { User as UserEntity } from './entities/user.entity';
+import { User as UserEntity } from './entity/user.entity';
 // import { FileInterceptor } from '@nestjs/platform-express';
 // import { IMAGE_TYPE_REGEX } from 'src/images/utils/images.constant';
 

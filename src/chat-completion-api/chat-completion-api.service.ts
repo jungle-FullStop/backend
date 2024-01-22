@@ -26,7 +26,7 @@ export class ChatCompletionApiService {
     this.chat = new ChatOpenAI({
       temperature: DEFAULT_TEMPERATURE,
       openAIApiKey: process.env.OPENAI_KEY,
-      streaming: true,
+      streaming: false,
       modelName: DEFAULT_MODEL,
     });
   }
