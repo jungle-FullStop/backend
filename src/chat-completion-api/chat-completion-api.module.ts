@@ -9,5 +9,6 @@ import { ChatCompletionApiRepository } from './chat-completion-api.repository';
   imports: [TypeOrmModule.forFeature([SearchHistory])],
   providers: [ChatCompletionApiService, ChatCompletionApiRepository],
   controllers: [ChatCompletionApiController],
+  exports: [ChatCompletionApiService],
 })
 export class ChatCompletionApiModule {}

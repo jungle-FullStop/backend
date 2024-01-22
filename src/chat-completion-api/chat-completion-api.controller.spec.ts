@@ -9,7 +9,9 @@ describe('ChatCompletionApiController', () => {
       controllers: [ChatCompletionApiController],
     }).compile();
 
-    controller = module.get<ChatCompletionApiController>(ChatCompletionApiController);
+    controller = module.get<ChatCompletionApiController>(
+      ChatCompletionApiController,
+    );
   });
 
   it('should be defined', () => {
