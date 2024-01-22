@@ -12,7 +12,7 @@ import { ChatCompletionApiRepository } from './chat-completion-api.repository';
 import { ExtensionHistoryDto } from '../extension/model/extension-history.dto';
 
 const DEFAULT_TEMPERATURE = 1;
-const DEFAULT_MODEL = 'gpt-3.5-turbo';
+const DEFAULT_MODEL = 'gpt-3.5-turbo-1106';
 
 @Injectable()
 export class ChatCompletionApiService {

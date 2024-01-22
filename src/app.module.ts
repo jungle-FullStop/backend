@@ -15,6 +15,9 @@ import { redisConfig } from './configs/redis.config';
     TagsModule,
     TypeOrmModule.forRoot(typeORMDevConfig),
     ChatCompletionApiModule,
+    HistoryModule,
+    RedisModule.forRoot({ config: redisConfig }),
+    AuthModule
   ],
   controllers: [],
   providers: [],
