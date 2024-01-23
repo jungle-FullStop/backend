@@ -28,14 +28,15 @@ export class HistoryService {
   }
 
   preprocess(tags: string): string {
-    const res: string[] = [];
+    const resSet = new Set();
     // 특수기호 정규식
-    const reg = /[`~!@#$%^&*()_|+\-=?;:'",<>\{\}\[\]\\\/]/gim;
+    const reg = /[`.~!@#$%^&*()_|+\-=—?;:'",<>\{\}\[\]\\\/]/gim;
     const preprocessTags: string[] = tags.replace(reg, '').split(' ');
     for (const preprocessTag of preprocessTags) {
-      res.push(this.removeStopwords(preprocessTag));
+      resSet.add(this.removeStopwords(preprocessTag));
     }
-    return res.join(', ');
+    resSet.delete('');
+    return Array.from(resSet.values()).join(', ');
   }
 
   removeStopwords(word: string): string {
