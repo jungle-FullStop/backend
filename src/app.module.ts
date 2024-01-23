@@ -5,6 +5,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { typeORMDevConfig } from './configs/typeorm.config';
 import { ChatCompletionApiModule } from './chat-completion-api/chat-completion-api.module';
 import { HistoryModule } from './extension/history.module';
+import { AuthModule } from './auth/auth.module';
+import { RedisModule } from '@liaoliaots/nestjs-redis';
+import { redisConfig } from './configs/redis.config';
 
 @Module({
   imports: [
@@ -13,6 +16,8 @@ import { HistoryModule } from './extension/history.module';
     TypeOrmModule.forRoot(typeORMDevConfig),
     ChatCompletionApiModule,
     HistoryModule,
+    RedisModule.forRoot({ config: redisConfig }),
+    AuthModule,
   ],
   controllers: [],
   providers: [],

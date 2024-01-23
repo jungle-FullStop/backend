@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 
-@Entity('ExtensionHistoryRecords') // 테이블 이름
+@Entity() // 테이블 이름
 export class ExtensionHistoryRecords {
   @PrimaryGeneratedColumn()
   id: number;
