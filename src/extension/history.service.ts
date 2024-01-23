@@ -13,16 +13,64 @@ export class HistoryService {
 
   async handleExtensionHistory(dto: ExtensionHistoryDto): Promise<any> {
     const processData = await this.chatService.processExtenstionData(dto);
+    const processTitle = this.preprocess(dto.title);
 
     const extensionHistoryRecord = this.historyRepository.create({
       userId: '3',
       visitedURL: dto.url,
       rawData: dto.title,
+      processedTitle: processTitle,
       processedData: processData,
     });
 
     this.historyRepository.save(extensionHistoryRecord);
     return processData;
+  }
+
+  preprocess(tags: string): string {
+    const res: string[] = [];
+    // 특수기호 정규식
+    const reg = /[`~!@#$%^&*()_|+\-=?;:'",<>\{\}\[\]\\\/]/gim;
+    const preprocessTags: string[] = tags.replace(reg, '').split(' ');
+    for (const preprocessTag of preprocessTags) {
+      res.push(this.removeStopwords(preprocessTag));
+    }
+    return res.join(', ');
+  }
+
+  removeStopwords(word: string): string {
+    // 한국어 불용어 리스트
+    const stopwords = [
+      '은',
+      '는',
+      '이',
+      '가',
+      '을',
+      '를',
+      '에',
+      '와',
+      '과',
+      '의',
+      '에서',
+      '로',
+      '든',
+      '든지',
+      '라도',
+      '이나',
+      '처럼',
+      '만',
+      '도',
+      '마저',
+      '부터',
+      '까지',
+      // 필요에 따라 더 추가할 수 있습니다.
+    ];
+    for (const stopword of stopwords) {
+      if (word.endsWith(stopword)) {
+        return word.slice(0, -stopword.length);
+      }
+    }
+    return word;
   }
 
   async getSearchHistoryByUserId(userId: string): Promise<string[]> {

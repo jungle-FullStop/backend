@@ -15,6 +15,9 @@ export class ExtensionHistoryRecords {
   rawData: string; // 가공 전 데이터
 
   @Column('text')
+  processedTitle: string; // 가공 후 검색 태그
+
+  @Column('text')
   processedData: string; // 가공 후 데이터
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
