@@ -11,7 +11,7 @@ class RelationDto {
 
 export class GetUserResponseDto {
   @ApiProperty({ description: '사용자 닉네임' })
-  nickname: string;
+  name: string;
 
   @ApiProperty({ description: '사용자 프로필 이미지' })
   profileImage: string;
@@ -34,7 +34,7 @@ export class SearchUserResponseDto {
   email: string;
 
   @ApiProperty({ description: '사용자 닉네임' })
-  nickname: string;
+  name: string;
 
   @ApiProperty({ description: '사용자 프로필 이미지' })
   profileImage: string;
@@ -43,5 +43,5 @@ export class SearchUserResponseDto {
 export class UpdateUserProfileRequestDto {
   @ApiProperty({ description: '사용자 닉네임' })
   @IsOptional()
-  nickname: string;
+  name: string;
 }

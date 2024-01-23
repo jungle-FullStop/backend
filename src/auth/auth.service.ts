@@ -11,7 +11,10 @@ import { AuthUserDto, LoginResultDto, OAuthLoginDto } from './dto/auth.dto';
 import { Request } from 'express';
 import { cookieExtractor } from './strategy/jwtAuth.strategy';
 import { SocialType } from 'src/users/entity/socialType';
-import { GET_GOOGLE_PROFILE_URL, GOOGLE_OAUTH_URL } from './utils/auth.constant';
+import {
+  GET_GOOGLE_PROFILE_URL,
+  GOOGLE_OAUTH_URL,
+} from './utils/auth.constant';
 import { v4 as uuidv4 } from 'uuid';
 import { AuthRepository } from './auth.repository';
 
@@ -26,22 +29,21 @@ export class AuthService {
   async login(oAuthLoginDto: OAuthLoginDto): Promise<LoginResultDto> {
     const googleAccessToken = await this.getToken(oAuthLoginDto);
     const profile = await this.getUserProfile(googleAccessToken);
-
+    console.log('1');
     let user = await this.usersRepository.findBySocialIdAndSocialType(
       profile.id,
       oAuthLoginDto.socialType,
     );
-
     if (!user) {
       user = await this.signUp(profile, oAuthLoginDto.socialType);
     }
-
     const accessKey = uuidv4();
+
     this.authRepository.setRefreshToken(accessKey);
 
     const accessToken = this.jwtService.sign({
       id: user.id,
-      nickname: user.nickname,
+      name: user.name,
       accessKey,
     });
 
@@ -63,24 +65,26 @@ export class AuthService {
       },
       body: this.makeGoogleOauthParam(null, oAuthLoginDto),
     });
-
+    const data = await response.json();
+    console.log('RES : ' + data);
     if (response.status !== 200) {
       throw new UnauthorizedException('유효하지 않은 인가 코드입니다.');
     }
 
-    const data = await response.json();
     return data.access_token;
   }
 
   async refreshAccessToken(req: Request) {
     const userJwt = cookieExtractor(req);
     const payload = this.jwtService.decode(userJwt);
-    const refreshToken = await this.authRepository.getRefreshToken(payload.accessKey);
+    const refreshToken = await this.authRepository.getRefreshToken(
+      payload.accessKey,
+    );
 
     if (refreshToken) {
       return this.jwtService.sign({
         id: payload.id,
-        nickname: payload.nickname,
+        name: payload.name,
         accessKey: payload.accessKey,
       });
     } else {
@@ -100,28 +104,30 @@ export class AuthService {
         Authorization: 'Bearer ' + accessToken,
       },
     });
-
     if (response.status === 401) {
       throw new UnauthorizedException('유효하지 않은 accessToken입니다.');
     } else if (response.status === 403) {
       throw new ForbiddenException('데이터 호출 권한이 없습니다.');
     } else if (response.status !== 200) {
-      throw new InternalServerErrorException('Naver 서버 에러입니다.');
+      throw new InternalServerErrorException('Google 서버 에러입니다.');
     }
 
     const data = await response.json();
-    return data.response as AuthUserDto;
+    return data as AuthUserDto;
   }
 
-  private makeGoogleOauthParam(refreshToken: string, dto: OAuthLoginDto = null): URLSearchParams {
+  private makeGoogleOauthParam(
+    refreshToken: string,
+    dto: OAuthLoginDto = null,
+  ): URLSearchParams {
     const params = new URLSearchParams();
     params.append('client_id', process.env.GOOGLE_CLIENT_ID);
     params.append('client_secret', process.env.GOOGLE_CLIENT_SECRET);
+    params.append('redirect_uri', 'http://localhost:5173/auth');
 
     if (!refreshToken) {
       params.append('grant_type', 'authorization_code');
       params.append('code', dto.code);
-      params.append('state', dto.state);
     } else {
       params.append('grant_type', 'refresh_token');
       params.append('refresh_token', refreshToken);

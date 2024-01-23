@@ -11,8 +11,14 @@ export class AuthController {
 
   @Post('/login')
   @ApiOperation({ description: 'Oauth 로그인 검증 및 토큰 발급 API' })
-  @ApiOkResponse({ description: '소셜 로그인 성공', type: OAuthLoginResponseDto })
-  async oauthLogin(@Body() oauthLoginDto: OAuthLoginDto, @Res() res: Response): Promise<void> {
+  @ApiOkResponse({
+    description: '소셜 로그인 성공',
+    type: OAuthLoginResponseDto,
+  })
+  async oauthLogin(
+    @Body() oauthLoginDto: OAuthLoginDto,
+    @Res() res: Response,
+  ): Promise<void> {
     const loginResult = await this.authService.login(oauthLoginDto);
 
     res.cookie('utk', loginResult.token, { httpOnly: true });
@@ -22,7 +28,10 @@ export class AuthController {
   @Get('refresh_token')
   @ApiOperation({ description: 'access token 갱신 API' })
   @ApiOkResponse({ description: 'access token 갱신 성공' })
-  async refreshAccessToken(@Req() req: Request, @Res() res: Response): Promise<void> {
+  async refreshAccessToken(
+    @Req() req: Request,
+    @Res() res: Response,
+  ): Promise<void> {
     const newJwt = await this.authService.refreshAccessToken(req);
 
     res.cookie('utk', newJwt, { httpOnly: true });

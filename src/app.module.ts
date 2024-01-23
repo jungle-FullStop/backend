@@ -17,7 +17,7 @@ import { redisConfig } from './configs/redis.config';
     ChatCompletionApiModule,
     HistoryModule,
     RedisModule.forRoot({ config: redisConfig }),
-    AuthModule
+    AuthModule,
   ],
   controllers: [],
   providers: [],

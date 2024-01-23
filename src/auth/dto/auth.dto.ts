@@ -4,13 +4,12 @@ import { SocialType } from 'src/users/entity/socialType';
 export class AuthUserDto {
   id: string;
   email: string;
-  nickname: string;
-  profile_image: string;
+  name: string;
+  picture: string;
 }
 
 export class OAuthLoginDto {
   code: string;
-  state: string;
   socialType: SocialType;
 }
 

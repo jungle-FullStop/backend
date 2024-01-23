@@ -1,4 +1,4 @@
 export enum SocialType {
-    NAVER = 'naver',
-    GOOGLE = 'google',
-  }
+  NAVER = 'naver',
+  GOOGLE = 'google',
+}

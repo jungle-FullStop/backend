@@ -7,7 +7,10 @@ import { swaggerConfig } from './configs/swagger.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors({});
+  app.enableCors({
+    origin: ['https://dandi-ary.site', 'http://localhost:5173'],
+    credentials: true,
+  });
   app.use(cookieParser());
   app.useGlobalFilters(new HttpExceptionFilter());
 

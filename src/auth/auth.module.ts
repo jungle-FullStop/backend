@@ -7,7 +7,6 @@ import { JwtAuthStrategy } from './strategy/jwtAuth.strategy';
 import { JWT_EXPIRE_DATE } from './utils/auth.constant';
 import { UsersModule } from 'src/users/users.module';
 import { AuthRepository } from './auth.repository';
-import { RedisModule } from '@liaoliaots/nestjs-redis';
 
 @Module({
   imports: [
