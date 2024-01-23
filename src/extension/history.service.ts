@@ -15,7 +15,7 @@ export class HistoryService {
     const processData = await this.chatService.processExtenstionData(dto);
 
     const extensionHistoryRecord = this.historyRepository.create({
-      userId: '1',
+      userId: '3',
       visitedURL: dto.url,
       rawData: dto.title,
       processedData: processData,
@@ -23,6 +23,16 @@ export class HistoryService {
 
     this.historyRepository.save(extensionHistoryRecord);
     return processData;
+  }
+
+  async getSearchHistoryByUserId(userId: string): Promise<string[]> {
+    const searchHistory = await this.historyRepository
+      .createQueryBuilder('history')
+      .where('history.userId = :userId', { userId })
+      .select('history.processedData')
+      .getMany();
+
+    return searchHistory.map((history) => history.processedData);
   }
 
   async getHistory(): Promise<ExtensionHistoryRecords[]> {
