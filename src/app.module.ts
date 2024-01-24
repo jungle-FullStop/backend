@@ -8,6 +8,7 @@ import { HistoryModule } from './extension/history.module';
 import { AuthModule } from './auth/auth.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { redisConfig } from './configs/redis.config';
+import { ReportModule } from './report/report.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { redisConfig } from './configs/redis.config';
     HistoryModule,
     RedisModule.forRoot({ config: redisConfig }),
     AuthModule,
+    ReportModule,
   ],
   controllers: [],
   providers: [],
