@@ -17,7 +17,7 @@ export class HistoryService {
     const processTitle = this.preprocess(dto.title);
 
     const extensionHistoryRecord = this.historyRepository.create({
-      userId: '3',
+      userId: '5',
       visitedURL: dto.url,
       rawData: dto.title,
       processedTitle: processTitle,
@@ -84,13 +84,14 @@ export class HistoryService {
       .createQueryBuilder('history')
       .where('history.userId = :userId', { userId })
       .andWhere('history.timestamp >= :dayDate AND history.timestamp < :nextDayDate', { dayDate, nextDayDate })
-      .select('history.processedData')
+      .select('history.processedTitle')
       .getMany();
 
     if (!searchHistory) {
       return null;
     }
-    return searchHistory.map((history) => history.processedData);
+    console.log(searchHistory);
+    return searchHistory.map((history) => history.processedTitle);
   }
 
   async getHistory(): Promise<ExtensionHistoryRecords[]> {
