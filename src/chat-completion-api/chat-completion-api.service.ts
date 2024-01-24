@@ -9,6 +9,7 @@ import {
 // import { SearchHistory } from './entity/search-history.entity';
 // import { InjectRepository } from '@nestjs/typeorm';
 import { ExtensionHistoryDto } from '../extension/model/extension-history.dto';
+import { CreateReportDto } from 'src/report/dto/create-report.dto';
 
 const DEFAULT_TEMPERATURE = 1;
 const DEFAULT_MODEL = 'gpt-3.5-turbo-1106';
@@ -40,7 +41,7 @@ export class ChatCompletionApiService {
   //     this.chatHistory.chatHistory,
   //   );
 
-  async getReport(data: GetChatCompletionAnswerInputDTO) {
+  async getReport(data: CreateReportDto) {
     const prompt = this.createReportPrompt(data.message);
     this.chatHistory.addHumanMessage(prompt);
     const result = await this.chat.predictMessages(
@@ -92,7 +93,7 @@ export class ChatCompletionApiService {
     // 예를 들어, title과 tags를 결합하여 프롬프트를 만듭니다.
     // `주제: ${title}\n관련 키워드: ${tags.join(', ')}\n\n위 주제와 관련된 기술 스택과 기술 용어를 나열해주세요.`;
     console.log(keyword);
-    return `제가 하루동안 검색한 ${keyword}를 바탕으로 개발과 관련된 글을 작성하려고 합니다. 적절한 제목을 선정하여 글의 양식만 예시와 같이 작성해주세요. 글의 마지막에는 명언을 넣어주세요.
+    return `제가 하루동안 검색한 ${keyword}를 바탕으로 개발과 관련된 글을 작성하려고 합니다. 적절한 제목을 선정하여 글의 양식만 예시와 같이 작성해주세요. 글의 마지막에는 한줄 뛰고 기울임 글씨체로 명언 문구만 넣어주세요.
     예시:
     ### 1. Emmet 소개
     - OAuth 프로토콜 흐름
