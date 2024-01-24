@@ -14,11 +14,13 @@ export class HistoryService {
 
   async handleExtensionHistory(dto: ExtensionHistoryDto): Promise<any> {
     const processData = await this.chatService.processExtenstionData(dto);
+    const processTitle = this.preprocess(dto.title);
 
     const extensionHistoryRecord = this.historyRepository.create({
       userId: '3',
       visitedURL: dto.url,
       rawData: dto.title,
+      processedTitle: processTitle,
       processedData: processData,
     });
 
@@ -26,9 +28,58 @@ export class HistoryService {
     return processData;
   }
 
+
+  
+  preprocess(tags: string): string {
+    const resSet = new Set();
+    // 특수기호 정규식
+    const reg = /[`.~!@#$%^&*()_|+\-=—?;:'",<>\{\}\[\]\\\/]/gim;
+    const preprocessTags: string[] = tags.replace(reg, '').split(' ');
+    for (const preprocessTag of preprocessTags) {
+      resSet.add(this.removeStopwords(preprocessTag));
+    }
+    resSet.delete('');
+    return Array.from(resSet.values()).join(', ');
+  }
+
+  removeStopwords(word: string): string {
+    // 한국어 불용어 리스트
+    const stopwords = [
+      '은',
+      '는',
+      '이',
+      '가',
+      '을',
+      '를',
+      '에',
+      '와',
+      '과',
+      '의',
+      '에서',
+      '로',
+      '든',
+      '든지',
+      '라도',
+      '이나',
+      '처럼',
+      '만',
+      '도',
+      '마저',
+      '부터',
+      '까지',
+      // 필요에 따라 더 추가할 수 있습니다.
+    ];
+    for (const stopword of stopwords) {
+      if (word.endsWith(stopword)) {
+        return word.slice(0, -stopword.length);
+      }
+    }
+    return word;
+  }
+
   async getSearchHistoryByUserId(userId: string, fromDate: Date): Promise<string[]> {
     const dayDate = startOfDay(fromDate);
-    const nextDayDate = startOfDay(addDays(fromDate, 1)); // 다음 날 자정
+    const nextDayDate = startOfDay(addDays(fromDate, 1)); // 다음 날 자
     const searchHistory = await this.historyRepository
       .createQueryBuilder('history')
       .where('history.userId = :userId', { userId })
