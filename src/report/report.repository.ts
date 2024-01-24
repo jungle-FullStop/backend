@@ -26,11 +26,11 @@ export class ReportRepository extends Repository<Report>{
     //     // return latestreport.report;
     // }
 
-
     async findById(userId: number): Promise<Report> {
         const latestReport = await this.findOne({
             where: { userId },
             order: { timestamp: 'DESC' }, // timestamp를 기준으로 내림차순 정렬
+            select: {report: true}
           });
       
         return latestReport
