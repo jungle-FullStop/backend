@@ -9,19 +9,31 @@ export class ReportRepository extends Repository<Report>{
     }
 
 
-    async findById(userId: number,fromDate:Date): Promise<string> {
-        const latestreport = await this.createQueryBuilder('report')
-          .where('report.userId = :userId', { userId })
-          .andWhere('report.timestamp > :fromDate', { fromDate })
-          .orderBy('report.timestamp', 'DESC') // timestamp를 기준으로 내림차순 정렬
-          .select('report.report')
-          .getOne();
+    // async findById(userId: number,fromDate:Date): Promise<object> {
+    //     const latestreport = await this.createQueryBuilder('report')
+    //       .where('report.userId = :userId', { userId })
+    //       .andWhere('report.timestamp > :fromDate', { fromDate })
+    //       .orderBy('report.timestamp', 'DESC') // timestamp를 기준으로 내림차순 정렬
+    //       .select('report.report')
+    //       .getOne();
 
-        if (!latestreport)  {
-            return null;
-        }
+    //     if (!latestreport)  {
+    //         return null;
+    //     }
+        
+    //     const parsedReport = JSON.parse(latestreport.report);
+    //     return parsedReport;
+    //     // return latestreport.report;
+    // }
 
-        return latestreport.report;
+
+    async findById(userId: number): Promise<Report> {
+        const latestReport = await this.findOne({
+            where: { userId },
+            order: { timestamp: 'DESC' }, // timestamp를 기준으로 내림차순 정렬
+          });
+      
+        return latestReport
     }
 
     async saveReport(report: string,fromDate:Date): Promise<string> {

@@ -4,6 +4,7 @@ import { UpdateReportDto } from './dto/update-report.dto';
 import { ReportRepository } from './report.repository';
 import { HistoryService } from 'src/extension/history.service';
 import { ChatCompletionApiService } from 'src/chat-completion-api/chat-completion-api.service';
+import { Report } from './entities/report.entity';
 
 @Injectable()
 export class ReportService {
@@ -11,8 +12,8 @@ export class ReportService {
               private readonly historyservice: HistoryService,
               private readonly chatservice: ChatCompletionApiService){}
   
-  async findById(userId: number, fromDate:Date): Promise<string> {
-    return await this.reportRepository.findById(userId, fromDate)
+  async findById(userId: number, fromDate:Date): Promise<Report> {
+    return await this.reportRepository.findById(userId)
   }
 
   async createSaveReport(userId: string, fromDate:Date): Promise<string> {
