@@ -1,4 +1,4 @@
-import { Module, forwardRef } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { HistoryController } from './history.controller';
 import { HistoryService } from './history.service';
 import { HistoryRepository } from './history.repository';
@@ -7,8 +7,10 @@ import { ExtensionHistoryRecords } from './entity/extension-history-records.enti
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [forwardRef(() => ChatCompletionApiModule),
-     TypeOrmModule.forFeature([ExtensionHistoryRecords])],
+  imports: [
+    ChatCompletionApiModule,
+    TypeOrmModule.forFeature([ExtensionHistoryRecords]),
+  ],
   controllers: [HistoryController],
   providers: [HistoryService, HistoryRepository],
   exports: [HistoryService],
