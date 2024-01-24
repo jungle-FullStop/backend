@@ -78,14 +78,17 @@ export class HistoryService {
   }
 
   async getSearchHistoryByUserId(userId: string, fromDate: Date): Promise<string[]> {
-    const dayDate = startOfDay(fromDate);
-    const nextDayDate = startOfDay(addDays(fromDate, 1)); // 다음 날 자
+    // const dayDate = startOfDay(fromDate);
+    // const nextDayDate = startOfDay(addDays(fromDate, 1)); // 다음 날 자
     const searchHistory = await this.historyRepository
       .createQueryBuilder('history')
       .where('history.userId = :userId', { userId })
-      .andWhere('history.timestamp >= :dayDate AND history.timestamp < :nextDayDate', { dayDate, nextDayDate })
+      // .andWhere('history.timestamp >= :dayDate AND history.timestamp < :nextDayDate', { dayDate, nextDayDate })
       .select('history.processedTitle')
       .getMany();
+    
+      // 2024-01-21 11:11:11
+    console.log("SERACH : " + searchHistory);
 
     if (!searchHistory) {
       return null;
