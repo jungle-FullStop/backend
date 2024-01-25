@@ -12,7 +12,12 @@ import { ExpiredTokenException } from '../utils/customException';
 export class JwtAuthGuard extends AuthGuard(JWT) {
   async canActivate(context: ExecutionContext): Promise<any> {
     const request = context.switchToHttp().getRequest();
-    const userJwt = cookieExtractor(request);
+    let userJwt = cookieExtractor(request);
+
+    if (request.path === '/extension/history' && request.method === 'POST') {
+      userJwt = request.body['utk'];
+      request.cookies['utk'] = userJwt;
+    }
 
     const jwtService = new JwtService({
       secret: process.env.JWT_SECRET,

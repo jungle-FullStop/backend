@@ -1,4 +1,4 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ChatCompletionApiService } from '../chat-completion-api/chat-completion-api.service';
 import { ExtensionHistoryDto } from './model/extension-history.dto';
 import { HistoryRepository } from './history.repository';
@@ -17,18 +17,16 @@ export class HistoryService {
     const processTitle = this.preprocess(dto.title);
 
     const extensionHistoryRecord = this.historyRepository.create({
-      userId: '1',
+      userId: dto.userId,
       visitedURL: dto.url,
       rawData: dto.title,
       processedTitle: processTitle,
       processedData: processData,
-      timestamp: new Date(),
     });
 
     this.historyRepository.save(extensionHistoryRecord);
     return processData;
   }
-
 
   preprocess(tags: string): string {
     const resSet = new Set();
@@ -81,28 +79,14 @@ export class HistoryService {
     userId: string,
     fromDate: Date,
   ): Promise<string[]> {
-    const offset = 1000 * 60 * 60 * 9;
-    const koreaNow = new Date(new Date(fromDate).getTime() + offset);
-    koreaNow.setUTCHours(0, 0, 0, 0);
-    const dayDate = koreaNow.toISOString().replace('T', ' ').split('.')[0];
-    // console.log(dayDate);
-    const nextDayDate = addDays(koreaNow, 1)
-      .toISOString()
-      .replace('T', ' ')
-      .split('.')[0]; // 다음 날 자
-    // console.log(nextDayDate);
+    // const dayDate = startOfDay(fromDate);
+    // const nextDayDate = startOfDay(addDays(fromDate, 1)); // 다음 날 자
     const searchHistory = await this.historyRepository
       .createQueryBuilder('history')
       .where('history.userId = :userId', { userId })
-      .andWhere(
-        'history.timestamp >= :dayDate AND history.timestamp < :nextDayDate',
-        { dayDate, nextDayDate },
-      )
+      // .andWhere('history.timestamp >= :dayDate AND history.timestamp < :nextDayDate', { dayDate, nextDayDate })
       .select('history.processedTitle')
       .getMany();
-
-    // 2024-01-21 11:11:11
-    console.log('SERACH : ' + searchHistory);
 
     // 2024-01-21 11:11:11
     console.log('SERACH : ' + searchHistory);
@@ -111,7 +95,7 @@ export class HistoryService {
       return null;
     }
     console.log(searchHistory);
-    return searchHistory.map((history) => history.processedData);
+    return searchHistory.map((history) => history.processedTitle);
   }
 
   async getHistory(): Promise<ExtensionHistoryRecords[]> {

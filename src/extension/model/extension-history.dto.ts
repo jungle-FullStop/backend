@@ -10,4 +10,7 @@ export class ExtensionHistoryDto {
   @IsArray()
   @IsString({ each: true })
   tag: string[];
+
+  @IsString()
+  userId: string;
 }
