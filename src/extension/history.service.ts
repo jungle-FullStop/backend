@@ -17,7 +17,7 @@ export class HistoryService {
     const processTitle = this.preprocess(dto.title);
 
     const extensionHistoryRecord = this.historyRepository.create({
-      userId: '5',
+      userId: '1',
       visitedURL: dto.url,
       rawData: dto.title,
       processedTitle: processTitle,
@@ -28,8 +28,6 @@ export class HistoryService {
     return processData;
   }
 
-
-  
   preprocess(tags: string): string {
     const resSet = new Set();
     // 특수기호 정규식
@@ -77,24 +75,27 @@ export class HistoryService {
     return word;
   }
 
-  async getSearchHistoryByUserId(userId: string, fromDate: Date): Promise<string[]> {
+  async getSearchHistoryByUserId(
+    userId: string,
+    fromDate: Date,
+  ): Promise<string[]> {
     // const dayDate = startOfDay(fromDate);
     // const nextDayDate = startOfDay(addDays(fromDate, 1)); // 다음 날 자
     const searchHistory = await this.historyRepository
       .createQueryBuilder('history')
       .where('history.userId = :userId', { userId })
       // .andWhere('history.timestamp >= :dayDate AND history.timestamp < :nextDayDate', { dayDate, nextDayDate })
-      .select('history.processedTitle')
+      .select('history.processedData')
       .getMany();
-    
-      // 2024-01-21 11:11:11
-    console.log("SERACH : " + searchHistory);
+
+    // 2024-01-21 11:11:11
+    console.log('SERACH : ' + searchHistory);
 
     if (!searchHistory) {
       return null;
     }
     console.log(searchHistory);
-    return searchHistory.map((history) => history.processedTitle);
+    return searchHistory.map((history) => history.processedData);
   }
 
   async getHistory(): Promise<ExtensionHistoryRecords[]> {
