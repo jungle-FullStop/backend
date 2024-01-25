@@ -7,8 +7,10 @@ import { ExtensionHistoryRecords } from './entity/extension-history-records.enti
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
-  imports: [forwardRef(() => ChatCompletionApiModule),
-     TypeOrmModule.forFeature([ExtensionHistoryRecords])],
+  imports: [
+    forwardRef(() => ChatCompletionApiModule),
+    TypeOrmModule.forFeature([ExtensionHistoryRecords]),
+  ],
   controllers: [HistoryController],
   providers: [HistoryService, HistoryRepository],
   exports: [HistoryService],
