@@ -29,6 +29,7 @@ export class HistoryService {
     return processData;
   }
 
+
   preprocess(tags: string): string {
     const resSet = new Set();
     // 특수기호 정규식
@@ -103,11 +104,14 @@ export class HistoryService {
     // 2024-01-21 11:11:11
     console.log('SERACH : ' + searchHistory);
 
+    // 2024-01-21 11:11:11
+    console.log('SERACH : ' + searchHistory);
+
     if (!searchHistory) {
       return null;
     }
     console.log(searchHistory);
-    return searchHistory.map((history) => history.processedTitle);
+    return searchHistory.map((history) => history.processedData);
   }
 
   async getHistory(): Promise<ExtensionHistoryRecords[]> {

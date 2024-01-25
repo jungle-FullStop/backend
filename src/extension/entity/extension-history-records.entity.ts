@@ -8,7 +8,7 @@ export class ExtensionHistoryRecords {
   @Column()
   userId: string; // 사용자 ID
 
-  @Column()
+  @Column('text')
   visitedURL: string; // 방문한 URL
 
   @Column('text')
