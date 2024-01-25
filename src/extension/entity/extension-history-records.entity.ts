@@ -23,4 +23,3 @@ export class ExtensionHistoryRecords {
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date; // 생성된 날짜
 }
-

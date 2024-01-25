@@ -37,7 +37,7 @@ export class ReportRepository extends Repository<Report> {
 
   async saveReport(report: string, fromDate: Date): Promise<string> {
     const reportRecord = this.create({
-      userId: 5,
+      userId: 1,
       report: report,
       timestamp: fromDate,
     });
