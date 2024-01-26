@@ -7,15 +7,15 @@ export class ReportController {
   constructor(private readonly reportservice: ReportService) {}
 
   @Get('/find/:userId')
-  async findById(@Param('userId') userId: string) {
+  async findById(@Param('userId') userId: number) {
     const fromDate = new Date();
     // console.log(fromDate);
     fromDate.setHours(0, 0, 0, 0);
-    return await this.reportservice.findById(+userId, fromDate);
+    return await this.reportservice.findById(userId, fromDate);
   }
 
   @Get('/create/:userId')
-  async createSaveReport(@Param('userId') userId: string) {
+  async createSaveReport(@Param('userId') userId: number) {
     const fromDate = new Date(); // 나중에 파라미터로 받아야할 듯?
     // console.log(fromDate);
     return await this.reportservice.createSaveReport(userId, fromDate);

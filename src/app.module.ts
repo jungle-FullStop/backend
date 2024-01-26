@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { RedisModule } from '@liaoliaots/nestjs-redis';
 import { redisConfig } from './configs/redis.config';
 import { ReportModule } from './report/report.module';
+import { MindmapModule } from './mindmap/mindmap.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { ReportModule } from './report/report.module';
     RedisModule.forRoot({ config: redisConfig }),
     AuthModule,
     ReportModule,
+    MindmapModule,
   ],
   controllers: [],
   providers: [],
