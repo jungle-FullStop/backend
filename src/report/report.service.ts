@@ -24,10 +24,13 @@ export class ReportService {
       userId,
       fromDate,
     );
+    const preprocessSearchHistory: string[] = searchHistory.map(
+      (history) => history.processedTitle,
+    );
 
     // 검색 기록을 string 형태로 변환하여 GetChatCompletionAnswerInputDTO에 담기
     const data: CreateReportDto = {
-      message: searchHistory.join(' '), // 예시: 검색 기록을 공백으로 구분한 문자열로 변환
+      message: preprocessSearchHistory.join(' '), // 예시: 검색 기록을 공백으로 구분한 문자열로 변환
     };
     // 결과 반환
     const report = await this.chatservice.getReport(data);

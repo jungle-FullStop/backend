@@ -8,7 +8,7 @@ export class Mindmap {
   @Column()
   userId: number;
 
-  @Column()
+  @Column('text')
   data: string;
   // data: NodeDataDefinition | EdgeDataDefinition;
 
