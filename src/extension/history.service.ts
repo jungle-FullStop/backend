@@ -3,7 +3,8 @@ import { ChatCompletionApiService } from '../chat-completion-api/chat-completion
 import { ExtensionHistoryDto } from './model/extension-history.dto';
 import { HistoryRepository } from './history.repository';
 import { ExtensionHistoryRecords } from './entity/extension-history-records.entity';
-import { addDays, startOfDay } from 'date-fns';
+import { stopwords } from './utils/stopwords';
+import { addDays } from 'date-fns';
 
 @Injectable()
 export class HistoryService {
@@ -13,8 +14,9 @@ export class HistoryService {
   ) {}
 
   async handleExtensionHistory(dto: ExtensionHistoryDto): Promise<any> {
-    const processData = await this.chatService.processExtenstionData(dto);
+    const aiData = await this.chatService.processExtenstionData(dto);
     const processTitle = this.preprocess(dto.title);
+    const processData = this.removeSybols(aiData);
 
     const extensionHistoryRecord = this.historyRepository.create({
       userId: dto.userId,
@@ -30,9 +32,9 @@ export class HistoryService {
 
   preprocess(tags: string): string {
     const resSet = new Set();
-    // 특수기호 정규식
-    const reg = /[`.~!@#$%^&*()_|+\-=—?;:'",<>\{\}\[\]\\\/]/gim;
-    const preprocessTags: string[] = tags.replace(reg, '').split(' ');
+    // 특수기호 제거
+    const preprocessTags = this.removeSybols(tags).split(' ');
+    // 불용어 제거
     for (const preprocessTag of preprocessTags) {
       resSet.add(this.removeStopwords(preprocessTag));
     }
@@ -40,33 +42,19 @@ export class HistoryService {
     return Array.from(resSet.values()).join(', ');
   }
 
+  removeSybols(word: string): string {
+    // 특수기호 정규식
+    const middleReg = /[`@#$%^&*()_|+\-=—;:'",<>\{\}\[\]\\\/]/gim;
+    const endReg = /[`.~!?]/gim;
+    const preprocess: string = word
+      .replace(middleReg, ' ')
+      .replace(endReg, '')
+      .replace(/[0-9]/g, '');
+    return preprocess;
+  }
+
   removeStopwords(word: string): string {
     // 한국어 불용어 리스트
-    const stopwords = [
-      '은',
-      '는',
-      '이',
-      '가',
-      '을',
-      '를',
-      '에',
-      '와',
-      '과',
-      '의',
-      '에서',
-      '로',
-      '든',
-      '든지',
-      '라도',
-      '이나',
-      '처럼',
-      '만',
-      '도',
-      '마저',
-      '부터',
-      '까지',
-      // 필요에 따라 더 추가할 수 있습니다.
-    ];
     for (const stopword of stopwords) {
       if (word.endsWith(stopword)) {
         return word.slice(0, -stopword.length);
@@ -88,7 +76,7 @@ export class HistoryService {
     const nextDayDate = addDays(koreaNow, 1)
       .toISOString()
       .replace('T', ' ')
-      .split('.')[0]; // 다음 날 자
+      .split('.')[0];
 
     const searchHistory = await this.historyRepository
       .createQueryBuilder('history')
@@ -99,16 +87,9 @@ export class HistoryService {
       )
       .getMany();
 
-    // 2024-01-21 11:11:11
-    // console.log('SERACH : ' + searchHistory);
-
-    // 2024-01-21 11:11:11
-    console.log('SERACH : ' + searchHistory);
-
     if (!searchHistory) {
       return null;
     }
-    console.log(searchHistory);
     return searchHistory;
   }
 

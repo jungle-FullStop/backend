@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MindmapRepository } from './mindmap.repository';
 import { HistoryService } from 'src/extension/history.service';
 import { Mindmap } from './entity/mindmap.entity';
+import { exceptKeyword } from 'src/extension/utils/stopwords';
 
 @Injectable()
 export class MindmapService {
@@ -24,8 +25,6 @@ export class MindmapService {
     const edges = [];
     const keywords = [];
     const relations = [];
-
-    const exceptKeyword = ['개발'];
 
     // 키워드 전처리
     const processedTitle = searchHistory
@@ -53,7 +52,7 @@ export class MindmapService {
     // 등장 횟수가 n개 이상인 것만 필터
     const nodeKeywords = Object.fromEntries(
       Object.entries(keywords)
-        .filter(([, value]) => value >= 5)
+        .filter(([, value]) => value >= 2)
         .sort(([, a], [, b]) => b - a),
     );
 
@@ -63,6 +62,7 @@ export class MindmapService {
         data: {
           id: node,
           label: node,
+          cnt: nodeKeywords[node],
         },
       });
     }
