@@ -25,6 +25,8 @@ export class MindmapService {
     const keywords = [];
     const relations = [];
 
+    const exceptKeyword = ['개발'];
+
     // 키워드 전처리
     const processedTitle = searchHistory
       .map((keyword) => keyword.processedTitle)
@@ -38,7 +40,8 @@ export class MindmapService {
       .toUpperCase()
       .split(', ');
 
-    const totalKeywords = [...processedTitle, ...processedData];
+    let totalKeywords = [...processedTitle, ...processedData];
+    totalKeywords = totalKeywords.filter((ele) => !exceptKeyword.includes(ele));
     // const TOTALCNT = totalKeywords.length;
 
     // 키워드 등장 횟수 계산
