@@ -8,8 +8,12 @@ import { Report } from './entities/report.entity';
 import { ChatCompletionApiModule } from 'src/chat-completion-api/chat-completion-api.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Report]), HistoryModule, ChatCompletionApiModule],
+  imports: [
+    TypeOrmModule.forFeature([Report]),
+    HistoryModule,
+    ChatCompletionApiModule,
+  ],
   controllers: [ReportController],
-  providers: [ReportService,ReportRepository],
+  providers: [ReportService, ReportRepository],
 })
 export class ReportModule {}

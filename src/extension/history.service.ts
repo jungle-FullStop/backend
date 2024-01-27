@@ -76,19 +76,20 @@ export class HistoryService {
   }
 
   async getSearchHistoryByUserId(
-    userId: string,
+    userId: number,
     fromDate: Date,
-  ): Promise<string[]> {
+  ): Promise<ExtensionHistoryRecords[]> {
     const offset = 1000 * 60 * 60 * 9;
     const koreaNow = new Date(new Date(fromDate).getTime() + offset);
     koreaNow.setUTCHours(0, 0, 0, 0);
+
     const dayDate = koreaNow.toISOString().replace('T', ' ').split('.')[0];
-    console.log(dayDate);
+
     const nextDayDate = addDays(koreaNow, 1)
       .toISOString()
       .replace('T', ' ')
       .split('.')[0]; // 다음 날 자
-    console.log(nextDayDate);
+
     const searchHistory = await this.historyRepository
       .createQueryBuilder('history')
       .where('history.userId = :userId', { userId })
@@ -96,7 +97,6 @@ export class HistoryService {
         'history.timestamp >= :dayDate AND history.timestamp < :nextDayDate',
         { dayDate, nextDayDate },
       )
-      .select('history.processedTitle')
       .getMany();
 
     // 2024-01-21 11:11:11
@@ -109,7 +109,7 @@ export class HistoryService {
       return null;
     }
     console.log(searchHistory);
-    return searchHistory.map((history) => history.processedTitle);
+    return searchHistory;
   }
 
   async getHistory(): Promise<ExtensionHistoryRecords[]> {
