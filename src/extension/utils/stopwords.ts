@@ -28,5 +28,3 @@ export const stopwords = [
   '편',
   // 필요에 따라 더 추가할 수 있습니다.
 ];
-
-export const exceptKeyword = ['개발', '정리'];

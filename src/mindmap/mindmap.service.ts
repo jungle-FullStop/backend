@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { MindmapRepository } from './mindmap.repository';
 import { HistoryService } from 'src/extension/history.service';
 import { Mindmap } from './entity/mindmap.entity';
-import { exceptKeyword } from 'src/extension/utils/stopwords';
+import { exceptKeyword } from './utils/exceptKeyword';
 
 @Injectable()
 export class MindmapService {
@@ -25,6 +25,7 @@ export class MindmapService {
     const edges = [];
     const keywords = [];
     const relations = [];
+    const TOTALHISTORY = searchHistory.length;
 
     // 키워드 전처리
     const processedTitle = searchHistory
@@ -108,6 +109,8 @@ export class MindmapService {
           id: edge,
           source: temp[0],
           target: temp[1],
+          cnt:
+            String(Math.round((edgeKeywords[edge] / TOTALHISTORY) * 100)) + '%',
         },
       });
     }
