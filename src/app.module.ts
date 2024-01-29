@@ -11,6 +11,7 @@ import { redisConfig } from './configs/redis.config';
 import { ReportModule } from './report/report.module';
 import { MindmapModule } from './mindmap/mindmap.module';
 import { BoardModule } from './board/board.module';
+import { TeamModule } from './team/team.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { BoardModule } from './board/board.module';
     ReportModule,
     MindmapModule,
     BoardModule,
+    TeamModule,
   ],
   controllers: [],
   providers: [],
