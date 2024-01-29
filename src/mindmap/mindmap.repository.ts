@@ -9,11 +9,10 @@ export class MindmapRepository extends Repository<Mindmap> {
   }
 
   async findMindmap(userId: number): Promise<Mindmap> {
-    const latestMindmap = await this.findOne({
+    return await this.findOne({
       where: { userId },
       order: { timestamp: 'DESC' }, // timestamp를 기준으로 내림차순 정렬
     });
-    return latestMindmap;
   }
 
   async saveMindmap(mindmap: string, fromDate: Date): Promise<Mindmap> {
@@ -22,7 +21,7 @@ export class MindmapRepository extends Repository<Mindmap> {
       data: mindmap,
       timestamp: fromDate,
     });
-    this.save(mindmapRecord);
+    await this.save(mindmapRecord);
     return mindmapRecord;
   }
 }
