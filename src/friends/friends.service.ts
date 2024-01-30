@@ -94,10 +94,34 @@ export class FriendsService {
         email: friend.email,
         name: friend.name,
         profileImage: friend.profileImage,
+        tilScore: friend.tilScore,
       };
     });
 
     return this.sortByName(friends);
+  }
+
+  async getFriendsRankList(userId: number): Promise<SearchUserResponseDto[]> {
+    const friendRelations =
+      await this.friendsRepository.findUserRelationsByStatus(
+        userId,
+        FriendStatus.COMPLETE,
+      );
+
+    const friends: SearchUserResponseDto[] = friendRelations.map((relation) => {
+      const friend =
+        relation.sender.id === userId ? relation.receiver : relation.sender;
+
+      return {
+        id: friend.id,
+        email: friend.email,
+        name: friend.name,
+        profileImage: friend.profileImage,
+        tilScore: friend.tilScore,
+      };
+    });
+
+    return this.sortByRank(friends);
   }
 
   async getStrangerList(userId: number): Promise<StrangerResponseDto[]> {
@@ -142,6 +166,14 @@ export class FriendsService {
       if (nameA < nameB) return -1;
       if (nameA > nameB) return 1;
       return 0;
+    }) as SortedUsersType<T>;
+  }
+
+  private sortByRank<T extends SearchUserResponseDto[] | StrangerResponseDto[]>(
+    users: T,
+  ): SortedUsersType<T> {
+    return users.sort((a, b) => {
+      return b.tilScore - a.tilScore;
     }) as SortedUsersType<T>;
   }
 

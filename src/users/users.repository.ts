@@ -60,6 +60,7 @@ export class UsersRepository extends Repository<User> {
       socialType,
       profileImage: picture,
       teamCode: 'ABC',
+      tilScore: 0,
     });
   }
 

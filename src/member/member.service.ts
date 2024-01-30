@@ -94,6 +94,7 @@ export class MemberService {
         email: member.email,
         name: member.name,
         profileImage: member.profileImage,
+        tilScore: member.tilScore,
       };
     });
 
