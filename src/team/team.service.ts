@@ -9,7 +9,7 @@ export class TeamService {
     private usersRepository: UsersRepository,
   ) {}
 
-  async createTeam(userId: string, teamName: string, teamCode: string) {
+  async createTeam(userId: number, teamName: string, teamCode: string) {
     await this.teamRepository.save({
       name: teamName,
       code: teamCode,
@@ -18,7 +18,7 @@ export class TeamService {
     return await this.usersRepository.updateTeamCode(userId, teamCode);
   }
 
-  async joinTeam(userId: string, teamCode: string) {
+  async joinTeam(userId: number, teamCode: string) {
     return await this.usersRepository.updateTeamCode(userId, teamCode);
   }
 

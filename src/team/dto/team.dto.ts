@@ -1,5 +1,5 @@
 export class TeamDto {
-  userId: string;
+  userId: number;
   name: string;
   code: string;
 }
@@ -9,6 +9,6 @@ export class TeamFindDto {
 }
 
 export class TeamDeleteDto {
-  userId: string;
+  userId: number;
   code: string;
 }
