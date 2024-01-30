@@ -9,7 +9,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { SocialType } from './socialType';
-import { Team } from '../../team/entity/team.entity';
+import { Member } from '../../member/entity/member.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -31,6 +31,15 @@ export class User extends BaseEntity {
   @Column({ length: 2083 })
   profileImage: string;
 
+  @Column()
+  teamCode: string;
+
+  @OneToMany(() => Member, (member) => member.sender, { cascade: true })
+  sender: Member[];
+
+  @OneToMany(() => Member, (member) => member.receiver, { cascade: true })
+  receiver: Member[];
+
   @CreateDateColumn()
   createdAt: Date;
 
@@ -39,10 +48,4 @@ export class User extends BaseEntity {
 
   @DeleteDateColumn()
   deletedAt: Date;
-
-  @OneToMany(() => Team, (friend) => friend.sender, { cascade: true })
-  sender: Team[];
-
-  @OneToMany(() => Team, (friend) => friend.receiver, { cascade: true })
-  receiver: Team[];
 }
