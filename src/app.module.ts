@@ -12,6 +12,8 @@ import { ReportModule } from './report/report.module';
 import { MindmapModule } from './mindmap/mindmap.module';
 import { BoardModule } from './board/board.module';
 import { TeamModule } from './team/team.module';
+import { FriendsModule } from './friends/friends.module';
+import { MemberModule } from './member/member.module';
 
 @Module({
   imports: [
@@ -26,6 +28,8 @@ import { TeamModule } from './team/team.module';
     MindmapModule,
     BoardModule,
     TeamModule,
+    FriendsModule,
+    MemberModule,
   ],
   controllers: [],
   providers: [],

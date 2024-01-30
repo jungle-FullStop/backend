@@ -1,21 +1,21 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
-export class MemberRelationDto {
+export class FriendRelationDto {
   @IsNotEmpty()
-  @ApiProperty({ description: '팀신청 보낸 사용자' })
+  @ApiProperty({ description: '친구신청 보낸 사용자' })
   senderId: number;
 
   @IsNotEmpty()
-  @ApiProperty({ description: '팀신청 받은 사용자' })
+  @ApiProperty({ description: '친구신청 받은 사용자' })
   receiverId: number;
 }
 
 export class StrangerResponseDto {
-  @ApiProperty({ description: '팀신청 보낸 사용자' })
+  @ApiProperty({ description: '친구신청 보낸 사용자' })
   senderId: number;
 
-  @ApiProperty({ description: '팀신청 받은 사용자' })
+  @ApiProperty({ description: '친구신청 받은 사용자' })
   receiverId: number;
 
   @ApiProperty({ description: '사용자 이메일' })

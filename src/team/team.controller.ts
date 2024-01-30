@@ -11,6 +11,14 @@ export class TeamController {
     const teamCode = teamDto.code;
     return await this.teamService.createTeam(userId, teamName, teamCode);
   }
+
+  @Post('/join')
+  async joinTeam(@Body() teamDto: TeamDto) {
+    const userId = teamDto.userId;
+    const teamCode = teamDto.code;
+    return await this.teamService.joinTeam(userId, teamCode);
+  }
+
   @Post('/find')
   async findTeam(@Body() teamFindDto: TeamFindDto) {
     const teamCode = teamFindDto.code;
@@ -18,7 +26,7 @@ export class TeamController {
   }
   @Delete('/delete')
   async deleteTeam(@Body() teamDeleteDto: TeamDeleteDto) {
-    const userId = teamDeleteDto.userId;
+    // const userId = teamDeleteDto.userId;
     const teamCode = teamDeleteDto.code;
     return await this.teamService.deleteTeam(teamCode);
   }
