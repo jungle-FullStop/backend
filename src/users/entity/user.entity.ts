@@ -34,11 +34,17 @@ export class User extends BaseEntity {
   @Column()
   teamCode: string;
 
+  @Column()
+  tilScore: number;
+
   @OneToMany(() => Member, (member) => member.sender, { cascade: true })
   sender: Member[];
 
   @OneToMany(() => Member, (member) => member.receiver, { cascade: true })
   receiver: Member[];
+
+  @Column()
+  firebaseToken: string;
 
   @CreateDateColumn()
   createdAt: Date;
