@@ -28,6 +28,16 @@ export class FriendsController {
     return { friends };
   }
 
+  @Get('/rank/:userId')
+  @UseGuards(JwtAuthGuard)
+  async getFriendsRankList(
+    @Param('userId', ParseIntPipe) userId: number,
+  ): Promise<Record<string, SearchUserResponseDto[]>> {
+    const friends = await this.friendsService.getFriendsRankList(userId);
+
+    return { friends };
+  }
+
   @Delete('/:friendId')
   @UseGuards(JwtAuthGuard)
   async deleteFriendRelation(

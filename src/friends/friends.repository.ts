@@ -39,8 +39,8 @@ export class FriendsRepository extends Repository<Friend> {
   async findUserRelationsByStatus(userId: number, status: FriendStatus) {
     return this.createQueryBuilder('friend')
       .select([
-        `JSON_OBJECT("id", sender.id, "email", sender.email, "name", sender.name, "profileImage", sender.profileImage) AS sender`,
-        `JSON_OBJECT("id", receiver.id, "email", receiver.email, "name", receiver.name, "profileImage", receiver.profileImage) AS receiver`,
+        `JSON_OBJECT("id", sender.id, "email", sender.email, "name", sender.name, "profileImage", sender.profileImage, "tilScore", sender.tilScore) AS sender`,
+        `JSON_OBJECT("id", receiver.id, "email", receiver.email, "name", receiver.name, "profileImage", receiver.profileImage, "tilScore", receiver.tilScore) AS receiver`,
       ])
       .innerJoin('friend.sender', 'sender')
       .innerJoin('friend.receiver', 'receiver')

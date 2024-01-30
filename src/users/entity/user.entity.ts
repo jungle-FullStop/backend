@@ -34,6 +34,9 @@ export class User extends BaseEntity {
   @Column()
   teamCode: string;
 
+  @Column()
+  tilScore: number;
+
   @OneToMany(() => Member, (member) => member.sender, { cascade: true })
   sender: Member[];
 

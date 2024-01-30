@@ -38,6 +38,9 @@ export class SearchUserResponseDto {
 
   @ApiProperty({ description: '사용자 프로필 이미지' })
   profileImage: string;
+
+  @ApiProperty({ description: '사용자 연속 커밋기록' })
+  tilScore: number;
 }
 
 export class UpdateUserProfileRequestDto {
