@@ -18,8 +18,7 @@ export class BoardController {
   async createBoard(@Body() boardDto: BoardDto) {
     const userId = boardDto.userId;
     const contents = boardDto.contents;
-    const fromDate = new Date();
-    return await this.boardService.createBoard(userId, contents, fromDate);
+    return await this.boardService.createBoard(userId, contents);
   }
 
   @Get('/find')
