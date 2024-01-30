@@ -9,11 +9,14 @@ import {
 } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { BoardDeleteDto, BoardDto, BoardUpdateDto } from './dto/board.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('board')
 export class BoardController {
-  constructor(private boardService: BoardService) {}
-
+  constructor(
+    private boardService: BoardService,
+    private userService: UsersService,
+  ) {}
   @Post('/create')
   async createBoard(@Body() boardDto: BoardDto) {
     const userId = boardDto.userId;
@@ -26,9 +29,18 @@ export class BoardController {
     return await this.boardService.findAll();
   }
 
-  @Get('/find/:userId')
-  async findById(@Param('userId') userId: number) {
-    return await this.boardService.findById(userId);
+  @Get('/find/:userId/:date?')
+  async findById(@Param('userId') userId: number, @Param('date') date?: Date) {
+    if (date) {
+      return await this.boardService.findByDate(userId, date);
+    } else {
+      const user = await this.userService.findUserById(userId);
+      const profileImage = user.profileImage;
+      const name = user.name;
+
+      const boards = await this.boardService.findOneForDate(userId);
+      return { user: { profileImage, name }, boards };
+    }
   }
 
   @Patch('/update')
