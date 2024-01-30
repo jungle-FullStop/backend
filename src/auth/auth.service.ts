@@ -42,7 +42,7 @@ export class AuthService {
     this.authRepository.setRefreshToken(accessKey);
 
     const accessToken = this.jwtService.sign({
-      id: user.id, 
+      id: user.id,
       name: user.name,
       accessKey,
     });

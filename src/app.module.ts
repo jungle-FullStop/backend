@@ -14,6 +14,7 @@ import { BoardModule } from './board/board.module';
 import { TeamModule } from './team/team.module';
 import { FriendsModule } from './friends/friends.module';
 import { MemberModule } from './member/member.module';
+import { FirebaseModule } from './firebase/firebase.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { MemberModule } from './member/member.module';
     TeamModule,
     FriendsModule,
     MemberModule,
+    FirebaseModule,
   ],
   controllers: [],
   providers: [],

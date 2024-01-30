@@ -40,6 +40,9 @@ export class User extends BaseEntity {
   @OneToMany(() => Member, (member) => member.receiver, { cascade: true })
   receiver: Member[];
 
+  @Column()
+  firebaseToken: string;
+
   @CreateDateColumn()
   createdAt: Date;
 
