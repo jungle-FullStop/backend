@@ -1,28 +1,16 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  ManyToOne,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
-import { TeamStatus } from './teamStatus';
-import { User } from 'src/users/entity/user.entity';
+import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
 export class Team extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: TeamStatus.WAITING })
-  status?: TeamStatus;
+  @Column()
+  name: string;
 
-  @ManyToOne(() => User, (user) => user.sender, {
-    nullable: false,
-  })
-  sender: User;
+  @Column()
+  code: string;
 
-  @ManyToOne(() => User, (user) => user.receiver, {
-    nullable: false,
-  })
-  receiver: User;
+  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  timestamp: Date; // 생성된 날짜
 }
