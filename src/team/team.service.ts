@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { TeamRepository } from './team.repository';
 import { UsersRepository } from '../users/users.repository';
-import { Team } from './entity/team.entity';
 
 @Injectable()
 export class TeamService {
@@ -16,6 +15,10 @@ export class TeamService {
       code: teamCode,
       timestamp: new Date(),
     });
+    return await this.usersRepository.updateTeamCode(userId, teamCode);
+  }
+
+  async joinTeam(userId: string, teamCode: string) {
     return await this.usersRepository.updateTeamCode(userId, teamCode);
   }
 

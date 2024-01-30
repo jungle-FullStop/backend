@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Member } from './entity/member.entity';
 import { DataSource, Equal, Repository } from 'typeorm';
 import { User } from 'src/users/entity/user.entity';
-import { MemberStatus } from './entity/MemberStatus';
+import { MemberStatus } from './entity/memberStatus';
 
 @Injectable()
 export class MemberRepository extends Repository<Member> {
@@ -10,13 +10,10 @@ export class MemberRepository extends Repository<Member> {
     super(Member, dataSource.createEntityManager());
   }
 
-  createTeam(userId: number, fromDate: Date): void {}
-
-  createTeamRelation(sender: User, receiver: User): void {
-    this.save({ sender, receiver });
-  }
-
-  async findTeamRequest(senderId: number, receiverId: number): Promise<Member> {
+  async findMemberRequest(
+    senderId: number,
+    receiverId: number,
+  ): Promise<Member> {
     return await this.findOne({
       where: {
         sender: Equal(senderId),
@@ -25,26 +22,26 @@ export class MemberRepository extends Repository<Member> {
     });
   }
 
-  findRelation(userId: number, teamId: number) {
+  findRelation(userId: number, memberId: number) {
     return this.createQueryBuilder('relation')
       .where('relation.status = :status', { status: MemberStatus.COMPLETE })
       .andWhere(
-        '(relation.receiverId = :userId AND relation.senderId = :teamId) OR (relation.receiverId = :teamId AND relation.senderId = :userId)',
-        { userId, teamId },
+        '(relation.receiverId = :userId AND relation.senderId = :memberId) OR (relation.receiverId = :memberId AND relation.senderId = :userId)',
+        { userId, memberId },
       )
       .getOne();
   }
 
   async findUserRelationsByStatus(userId: number, status: MemberStatus) {
-    return this.createQueryBuilder('team')
+    return this.createQueryBuilder('member')
       .select([
         `JSON_OBJECT("id", sender.id, "email", sender.email, "name", sender.name, "profileImage", sender.profileImage) AS sender`,
         `JSON_OBJECT("id", receiver.id, "email", receiver.email, "name", receiver.name, "profileImage", receiver.profileImage) AS receiver`,
       ])
-      .innerJoin('team.sender', 'sender')
-      .innerJoin('team.receiver', 'receiver')
-      .where('team.status = :status', { status })
-      .andWhere('(team.senderId = :userId OR team.receiverId = :userId)', {
+      .innerJoin('member.sender', 'sender')
+      .innerJoin('member.receiver', 'receiver')
+      .where('member.status = :status', { status })
+      .andWhere('(member.senderId = :userId OR member.receiverId = :userId)', {
         userId,
       })
       .getRawMany();

@@ -7,105 +7,105 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { MemberService } from './member.service';
+import { FriendsService } from './friends.service';
 import { User } from 'src/users/utils/user.decorator';
 import { User as UserEntity } from 'src/users/entity/user.entity';
 import { SearchUserResponseDto } from 'src/users/dto/user.dto';
-import { StrangerResponseDto } from './dto/member.dto';
+import { StrangerResponseDto } from './dto/friend.dto';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 
-@Controller('member')
-export class MemberController {
-  constructor(private readonly memberService: MemberService) {}
+@Controller('friends')
+export class FriendsController {
+  constructor(private readonly friendsService: FriendsService) {}
 
   @Get('/:userId')
   @UseGuards(JwtAuthGuard)
-  async getMemberList(
+  async getFriendsList(
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<Record<string, SearchUserResponseDto[]>> {
-    const member = await this.memberService.getMemberList(userId);
+    const friends = await this.friendsService.getFriendsList(userId);
 
-    return { member };
+    return { friends };
   }
 
-  @Delete('/:memberId')
+  @Delete('/:friendId')
   @UseGuards(JwtAuthGuard)
-  async deleteMemberRelation(
+  async deleteFriendRelation(
     @User() user: UserEntity,
-    @Param('memberId', ParseIntPipe) memberId: number,
+    @Param('friendId', ParseIntPipe) friendId: number,
   ) {
-    await this.memberService.deleteMemberRelation(user.id, memberId);
+    await this.friendsService.deleteFriendRelation(user.id, friendId);
 
-    return '팀이 삭제되었습니다.';
+    return '친구가 삭제되었습니다.';
   }
 
   @Get('request/:userId')
   @UseGuards(JwtAuthGuard)
-  async getMemberRequestList(
+  async getFriendRequestList(
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<Record<string, StrangerResponseDto[]>> {
-    const strangers = await this.memberService.getStrangerList(userId);
+    const strangers = await this.friendsService.getStrangerList(userId);
 
     return { strangers };
   }
 
   @Post('request/:receiverId')
   @UseGuards(JwtAuthGuard)
-  async requestMember(
+  async requestFriend(
     @User() user: UserEntity,
     @Param('receiverId', ParseIntPipe) receiverId: number,
   ): Promise<string> {
-    await this.memberService.requestMember({ senderId: user.id, receiverId });
+    await this.friendsService.requestFriend({ senderId: user.id, receiverId });
 
-    return '팀 신청이 완료되었습니다.';
+    return '친구 신청이 완료되었습니다.';
   }
 
   @Delete('request/:receiverId')
   @UseGuards(JwtAuthGuard)
-  async cancelMemberRequest(
+  async cancelFriendRequest(
     @User() user: UserEntity,
     @Param('receiverId', ParseIntPipe) receiverId: number,
   ): Promise<string> {
-    await this.memberService.cancelMemberRequest({
+    await this.friendsService.cancelFriendRequest({
       senderId: user.id,
       receiverId,
     });
 
-    return '팀 신청이 취소되었습니다.';
+    return '친구 신청이 취소되었습니다.';
   }
 
   @Post('allow/:senderId')
   @UseGuards(JwtAuthGuard)
-  async allowMemberRequest(
+  async allowFriendRequest(
     @User() user: UserEntity,
     @Param('senderId', ParseIntPipe) senderId: number,
   ): Promise<string> {
-    await this.memberService.allowMemberRequest({
+    await this.friendsService.allowFriendRequest({
       senderId,
       receiverId: user.id,
     });
-    return '팀 신청을 수락했습니다.';
+    return '친구 신청을 수락했습니다.';
   }
 
   @Delete('allow/:senderId')
   @UseGuards(JwtAuthGuard)
-  async rejectMemberRequest(
+  async rejectFriendRequest(
     @User() user: UserEntity,
     @Param('senderId', ParseIntPipe) senderId: number,
   ): Promise<string> {
-    await this.memberService.cancelMemberRequest({
+    await this.friendsService.cancelFriendRequest({
       senderId,
       receiverId: user.id,
     });
-    return '팀 신청을 거절했습니다.';
+    return '친구 신청을 거절했습니다.';
   }
 
   @Get('search/:name')
   @UseGuards(JwtAuthGuard)
-  async searchMember(
+  async searchFriend(
     @User() user: UserEntity,
     @Param('name') name: string,
   ): Promise<SearchUserResponseDto[]> {
-    return this.memberService.searchMember(user.id, name);
+    return this.friendsService.searchFriend(user.id, name);
   }
 }

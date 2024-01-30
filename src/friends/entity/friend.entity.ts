@@ -5,16 +5,16 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { MemberStatus } from './memberStatus';
+import { FriendStatus } from './friendStatus';
 import { User } from 'src/users/entity/user.entity';
 
 @Entity()
-export class Member extends BaseEntity {
+export class Friend extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: MemberStatus.WAITING })
-  status?: MemberStatus;
+  @Column({ default: FriendStatus.WAITING })
+  status?: FriendStatus;
 
   @ManyToOne(() => User, (user) => user.sender, {
     nullable: false,
