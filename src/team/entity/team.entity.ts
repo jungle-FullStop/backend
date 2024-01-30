@@ -1,15 +1,15 @@
 import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class Board extends BaseEntity {
+export class Team extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  userId: number;
+  name: string;
 
-  @Column({ length: 10000 })
-  contents: string;
+  @Column()
+  code: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date; // 생성된 날짜

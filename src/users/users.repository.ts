@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, Repository, UpdateResult } from 'typeorm';
 import { User } from './entity/user.entity';
 import { AuthUserDto } from 'src/auth/dto/auth.dto';
 import { SocialType } from './entity/socialType';
@@ -40,7 +40,19 @@ export class UsersRepository extends Repository<User> {
       name,
       socialType,
       profileImage: picture,
+      teamCode: 'ABC',
     });
+  }
+
+  async updateTeamCode(
+    userId: string,
+    teamCode: string,
+  ): Promise<UpdateResult> {
+    return await this.createQueryBuilder('user')
+      .update(User)
+      .set({ teamCode })
+      .where('user.email = :email', { email: userId })
+      .execute();
   }
 
   async findByNickname(name: string): Promise<User[]> {
