@@ -6,6 +6,7 @@ import { TeamStatusEvent } from './events/team-status.event';
 import { TeamStreamDto } from './dto/team.dto';
 import { TeamRepository } from './team.repository';
 import { UsersRepository } from '../users/users.repository';
+import { User as UserEntity } from '../users/entity/user.entity';
 
 @Injectable()
 export class TeamService {
@@ -35,7 +36,19 @@ export class TeamService {
     const streamDTO: TeamStreamDto = {
       userId,
       status: 'writing', // 또는 상태를 업데이트합니다.
-      teamCode: teamId,
+      teamCode: teamId.toString(),
+    };
+    this.eventEmitter.emit(TeamStatusEvent.EVENT_NAME, streamDTO);
+  }
+
+  async updateTeamMemberStatus(user_entity: UserEntity, status: string) {
+    // 팀원들의 userId 리스트를 DB에서 가져옵니다.
+
+    // 갱신된 정보를 이벤트와 함께 전송합니다.
+    const streamDTO: TeamStreamDto = {
+      userId: user_entity.id,
+      status: status, // 또는 상태를 업데이트합니다.
+      teamCode: user_entity.teamCode,
     };
     this.eventEmitter.emit(TeamStatusEvent.EVENT_NAME, streamDTO);
   }

@@ -82,7 +82,16 @@ export class TeamController {
     this.teamService.startWriting(teamId, userId);
     return { message: 'Writing started.' };
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('change-status')
+  async changeStatus(@User() user: UserEntity, @Body('status') status: string) {
+    // status를 Enum 스럽게 쓰는 것이 훨씬 좋을 듯
+    return await this.teamService.updateTeamMemberStatus(user, status);
+  }
 }
+
+// 사용자가 글을 쓰는 페이지에 들어감, 페이지에서 저장안하고 나가는 시점을 잡는 곳
 
 // @Controller('team')
 // export class TeamController {

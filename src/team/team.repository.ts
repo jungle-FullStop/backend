@@ -70,27 +70,22 @@ export class TeamRepository extends Repository<Team> {
     const userlist = await this.dataSource
       .getRepository(User)
       .createQueryBuilder('user')
-      .leftJoinAndSelect(
-        (subQuery) => {
-          return subQuery
-            .from(Board, 'board')
-            .where('board.timestamp BETWEEN :todayStart AND :todayEnd', {
-              todayStart,
-              todayEnd,
-            });
-        },
-        'todayBoard',
-        'todayBoard.userId = user.id',
+      .leftJoin(
+        'user.boards', // User 엔티티에서 board 관계를 정의해야 합니다.
+        'board',
+        'board.timestamp BETWEEN :todayStart AND :todayEnd',
+        { todayStart, todayEnd },
       )
       .addSelect(
         `
-    CASE 
-      WHEN todayBoard.id IS NOT NULL THEN 'written' 
-      ELSE 'not_written' 
-    END`,
+      CASE 
+        WHEN board.id IS NOT NULL THEN 'written' 
+        ELSE 'not_written' 
+      END`,
         'userStatus',
       )
       .where('user.teamCode = :teamCode', { teamCode })
+      .groupBy('user.id') // 중복을 제거하기 위해 그룹화
       .getRawMany();
     console.log(userlist);
     // 결과 포맷을 정리하여 반환

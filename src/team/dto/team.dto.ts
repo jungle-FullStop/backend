@@ -16,5 +16,5 @@ export class TeamDeleteDto {
 export class TeamStreamDto {
   userId: number;
   status: string;
-  teamCode: number;
+  teamCode: string;
 }
