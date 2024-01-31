@@ -12,3 +12,9 @@ export class TeamDeleteDto {
   userId: number;
   code: string;
 }
+
+export class TeamStreamDto {
+  userId: number;
+  status: string;
+  teamCode: number;
+}

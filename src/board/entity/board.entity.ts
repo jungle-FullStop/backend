@@ -1,4 +1,11 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  BaseEntity,
+  Column,
+  Entity,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { User } from '../../users/entity/user.entity';
 
 @Entity()
 export class Board extends BaseEntity {
@@ -13,4 +20,7 @@ export class Board extends BaseEntity {
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
   timestamp: Date; // 생성된 날짜
+
+  @ManyToOne(() => User, (user) => user.boards)
+  user: User;
 }

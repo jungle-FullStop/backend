@@ -15,9 +15,13 @@ import { TeamModule } from './team/team.module';
 import { FriendsModule } from './friends/friends.module';
 import { MemberModule } from './member/member.module';
 import { FirebaseModule } from './firebase/firebase.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { eventEmitterConfig } from '../configs/event-emitter.config';
+import { TeamtrackingModule } from '@app/teamtracking';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(eventEmitterConfig),
     UsersModule,
     TagsModule,
     TypeOrmModule.forRoot(typeORMDevConfig),
@@ -32,6 +36,7 @@ import { FirebaseModule } from './firebase/firebase.module';
     FriendsModule,
     MemberModule,
     FirebaseModule,
+    TeamtrackingModule,
   ],
   controllers: [],
   providers: [],

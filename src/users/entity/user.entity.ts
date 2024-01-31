@@ -10,6 +10,7 @@ import {
 } from 'typeorm';
 import { SocialType } from './socialType';
 import { Member } from '../../member/entity/member.entity';
+import { Board } from '../../board/entity/board.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -36,6 +37,9 @@ export class User extends BaseEntity {
 
   @Column()
   tilScore: number;
+
+  @OneToMany(() => Board, (board) => board.user)
+  boards: Board[];
 
   @OneToMany(() => Member, (member) => member.sender, { cascade: true })
   sender: Member[];

@@ -17,5 +17,13 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-  },
+    "paths": {
+      "@app/teamtracking": [
+        "libs/teamtracking/src"
+      ],
+      "@app/teamtracking/*": [
+        "libs/teamtracking/src/*"
+      ]
+    }
+  }
 }
