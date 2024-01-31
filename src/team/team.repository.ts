@@ -71,29 +71,33 @@ export class TeamRepository extends Repository<Team> {
       .getRepository(User)
       .createQueryBuilder('user')
       .leftJoin(
-        'user.boards', // User 엔티티에서 board 관계를 정의해야 합니다.
+        'user.boards',
         'board',
         'board.timestamp BETWEEN :todayStart AND :todayEnd',
         { todayStart, todayEnd },
       )
+      .select('user.id', 'id')
+      .addSelect('user.name', 'name')
+      .addSelect('user.profileImage', 'profileImage')
       .addSelect(
         `
       CASE 
-        WHEN board.id IS NOT NULL THEN 'written' 
+        WHEN MAX(board.id) IS NOT NULL THEN 'written' 
         ELSE 'not_written' 
       END`,
         'userStatus',
       )
       .where('user.teamCode = :teamCode', { teamCode })
-      .groupBy('user.id') // 중복을 제거하기 위해 그룹화
+      .groupBy('user.id')
       .getRawMany();
+
     console.log(userlist);
     // 결과 포맷을 정리하여 반환
     return userlist.map((user) => ({
-      id: user.user_id,
-      name: user.user_name,
+      id: user.id,
+      name: user.name,
       status: user.userStatus,
-      profileImage: user.user_profileImage,
+      profileImage: user.profileImage,
       // 다른 필요한 필드들...
     }));
   }
