@@ -6,10 +6,14 @@ import {
   Patch,
   Delete,
   Body,
+  UseGuards,
 } from '@nestjs/common';
 import { BoardService } from './board.service';
 import { BoardDeleteDto, BoardDto, BoardUpdateDto } from './dto/board.dto';
 import { UsersService } from 'src/users/users.service';
+import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
+import { User } from '../users/utils/user.decorator';
+import { User as UserEntity } from '../users/entity/user.entity';
 
 @Controller('board')
 export class BoardController {
@@ -17,11 +21,13 @@ export class BoardController {
     private boardService: BoardService,
     private userService: UsersService,
   ) {}
+
   @Post('/create')
-  async createBoard(@Body() boardDto: BoardDto) {
+  @UseGuards(JwtAuthGuard)
+  async createBoard(@Body() boardDto: BoardDto, @User() user: UserEntity) {
     const userId = boardDto.userId;
     const contents = boardDto.contents;
-    return await this.boardService.createBoard(userId, contents);
+    return await this.boardService.createBoard(userId, contents, user);
   }
 
   @Get('/find')

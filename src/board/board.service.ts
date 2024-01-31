@@ -2,17 +2,32 @@ import { BoardRepository } from './board.repository';
 import { Injectable } from '@nestjs/common';
 import { Board } from './entity/board.entity';
 import { addDays } from 'date-fns';
+import { EventEmitter2 } from '@nestjs/event-emitter';
+import { TeamStatusEvent } from '../team/events/team-status.event';
+import { TeamStreamDto } from '../team/dto/team.dto';
+import { User as UserEntity } from '../users/entity/user.entity';
 
 @Injectable()
 export class BoardService {
-  constructor(private boardRepository: BoardRepository) {}
+  constructor(
+    private boardRepository: BoardRepository,
+    private readonly eventEmitter: EventEmitter2,
+  ) {}
 
-  async createBoard(userId: number, contents: string) {
+  async createBoard(userId: number, contents: string, user: UserEntity) {
     await this.boardRepository.save({
       userId: userId,
       contents: contents,
       timestamp: new Date(),
     });
+
+    const streamDTO: TeamStreamDto = {
+      userId,
+      status: 'written', // 또는 상태를 업데이트합니다.
+      teamCode: user.teamCode,
+    };
+
+    this.eventEmitter.emit(TeamStatusEvent.EVENT_NAME, streamDTO);
   }
 
   async findAll(): Promise<Board[]> {
