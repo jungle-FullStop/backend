@@ -13,11 +13,11 @@ const DEFAULT_MODEL = 'gpt-3.5-turbo-1106';
 
 @Injectable()
 export class ChatCompletionApiService {
-  private readonly chatManager: ChatHistoryManager;
+  // private readonly chatManager: ChatHistoryManager;
   private readonly chat: ChatOpenAI;
 
   constructor() {
-    this.chatManager = new ChatHistoryManager('한국말로만 대답해주세요');
+    // this.chatManager = new ChatHistoryManager('한국말로만 대답해주세요');
     this.chat = new ChatOpenAI({
       temperature: DEFAULT_TEMPERATURE,
       openAIApiKey: process.env.OPENAI_KEY,
@@ -27,30 +27,28 @@ export class ChatCompletionApiService {
   }
 
   async getReport(data: CreateReportDto) {
+    const chatManager = new ChatHistoryManager('한국말로만 대답해주세요');
+
     const prompt = this.createReportPrompt(data.message);
-    this.chatManager.addHumanMessage(prompt);
-    const result = await this.chat.predictMessages(
-      this.chatManager.chatHistory,
-    );
+    chatManager.addHumanMessage(prompt);
+    const result = await this.chat.predictMessages(chatManager.chatHistory);
 
     const aiMessage = result.content;
 
-    this.chatManager.addAiMessage(aiMessage);
-
+    chatManager.addAiMessage(aiMessage);
     return GetChatCompletionAnswerOutputDTO.getInstance(aiMessage);
   }
 
   async processExtenstionData(dto: ExtensionHistoryDto): Promise<string> {
+    const chatManager = new ChatHistoryManager();
     const prompt = this.createKeywordPrompt(dto.title, dto.tag);
 
-    this.chatManager.addHumanMessage(prompt);
-    const result = await this.chat.predictMessages(
-      this.chatManager.chatHistory,
-    );
+    chatManager.addHumanMessage(prompt);
+    const result = await this.chat.predictMessages(chatManager.chatHistory);
 
     const aiMessage = result.content;
 
-    this.chatManager.addAiMessage(aiMessage);
+    chatManager.addAiMessage(aiMessage);
     return aiMessage;
   }
 
