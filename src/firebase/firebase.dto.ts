@@ -9,3 +9,16 @@ export class SaveTokenDto {
   @IsNotEmpty()
   token: string;
 }
+
+export class PushMessageDto {
+  @IsInt()
+  @IsNotEmpty()
+  memberId: number;
+
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+
+  @IsString()
+  body: string;
+}

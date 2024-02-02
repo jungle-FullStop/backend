@@ -13,14 +13,11 @@ const DEFAULT_MODEL = 'gpt-3.5-turbo-1106';
 
 @Injectable()
 export class ChatCompletionApiService {
-  private readonly chatHistory: ChatHistoryManager;
+  private readonly chatManager: ChatHistoryManager;
   private readonly chat: ChatOpenAI;
 
-  // private readonly chatCompletionApiRepository: ChatCompletionApiRepository;
-
   constructor() {
-    // private readonly chatCompletionApiRepository: ChatCompletionApiRepository,
-    this.chatHistory = new ChatHistoryManager();
+    this.chatManager = new ChatHistoryManager('한국말로만 대답하세요');
     this.chat = new ChatOpenAI({
       temperature: DEFAULT_TEMPERATURE,
       openAIApiKey: process.env.OPENAI_KEY,
@@ -31,14 +28,14 @@ export class ChatCompletionApiService {
 
   async getReport(data: CreateReportDto) {
     const prompt = this.createReportPrompt(data.message);
-    this.chatHistory.addHumanMessage(prompt);
+    this.chatManager.addHumanMessage(prompt);
     const result = await this.chat.predictMessages(
-      this.chatHistory.chatHistory,
+      this.chatManager.chatHistory,
     );
 
     const aiMessage = result.content;
 
-    this.chatHistory.addAiMessage(aiMessage);
+    this.chatManager.addAiMessage(aiMessage);
 
     return GetChatCompletionAnswerOutputDTO.getInstance(aiMessage);
   }
@@ -46,14 +43,14 @@ export class ChatCompletionApiService {
   async processExtenstionData(dto: ExtensionHistoryDto): Promise<string> {
     const prompt = this.createKeywordPrompt(dto.title, dto.tag);
 
-    this.chatHistory.addHumanMessage(prompt);
+    this.chatManager.addHumanMessage(prompt);
     const result = await this.chat.predictMessages(
-      this.chatHistory.chatHistory,
+      this.chatManager.chatHistory,
     );
 
     const aiMessage = result.content;
 
-    this.chatHistory.addAiMessage(aiMessage);
+    this.chatManager.addAiMessage(aiMessage);
     return aiMessage;
   }
 

@@ -8,9 +8,8 @@ import {
   Res,
 } from '@nestjs/common';
 import { Response } from 'express';
-import axios from 'axios';
 import { FirebaseCloudMessageService } from './firebase.service';
-import { SaveTokenDto } from './firebase.dto';
+import { PushMessageDto, SaveTokenDto } from './firebase.dto';
 
 @Controller('push')
 export class FirebaseController {
@@ -30,39 +29,60 @@ export class FirebaseController {
         .json({ error: error.message });
     }
   }
-
-  @Get('/:userId')
-  async sendPushNotification(@Param('userId') userId: number) {
+  @Post('/')
+  async sendPushNotification(@Body() pushMessageDto: PushMessageDto) {
+    console.log('요청받음');
     const accessToken = await this.fierbaseService.getAccessToken();
     try {
-      const targetToken = await this.fierbaseService.getTargetToken(userId);
+      const targetToken = await this.fierbaseService.getTargetToken(
+        pushMessageDto.memberId,
+      );
       const message = {
         message: {
           token: targetToken,
           notification: {
-            title: 'TIL',
-            body: '레츠고.',
+            title: pushMessageDto.body
+              ? `${pushMessageDto.title}님이 응원합니다!`
+              : `${pushMessageDto.title}님이 콕 찔렀습니다!`,
+            body: pushMessageDto.body,
+            image: 'https://images.app.goo.gl/uFEEuHyWJFFreQxJ7', // 이미지 URL 추가
           },
           data: {
             style: '테스트',
           },
         },
       };
-      const response = await axios.post(
-        'https://fcm.googleapis.com/v1/projects/fullstop-bfe10/messages:send',
-        message,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      );
-      console.log('Successfully sent message: ', response.data);
-      return response.data;
+      console.log('메세지 보내기 전');
+      return await this.fierbaseService.sendMessage(message, accessToken);
     } catch (error) {
       console.error('Error Sending message: ', error.response);
       throw error;
     }
   }
 }
+
+//   @Get('/:userId')
+//   async sendPushNotification(@Param('userId') userId: number) {
+//     const accessToken = await this.fierbaseService.getAccessToken();
+//     try {
+//       const targetToken = await this.fierbaseService.getTargetToken(userId);
+//       const message = {
+//         message: {
+//           token: targetToken,
+//           notification: {
+//             title: '콕',
+//             body: '찌르기.',
+//             image: 'https://ibb.co/WtGKK8R', // 이미지 URL 추가
+//           },
+//           data: {
+//             style: '테스트',
+//           },
+//         },
+//       };
+//       return await this.fierbaseService.sendMessage(message, accessToken);
+//     } catch (error) {
+//       console.error('Error Sending message: ', error.response);
+//       throw error;
+//     }
+//   }
+// }

@@ -1,12 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { google } from 'googleapis';
-// import { readFileSync } from 'fs';
+import axios from 'axios';
 import { UsersRepository } from 'src/users/users.repository';
 import { SaveTokenDto } from './firebase.dto';
 
 @Injectable()
 export class FirebaseCloudMessageService {
   constructor(private readonly usersRepository: UsersRepository) {}
+
+  async sendMessage(
+    message: {
+      message: {
+        token: string;
+        notification: { title: string; body: string; image: string };
+        data: { style: string };
+      };
+    },
+    accessToken: string,
+  ) {
+    const response = await axios.post(
+      'https://fcm.googleapis.com/v1/projects/fullstop-bfe10/messages:send',
+      message,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      },
+    );
+    console.log('Successfully sent message: ', response.data);
+    return response.data;
+  }
+  catch(error) {
+    console.error('Error Sending message: ', error.response);
+    throw error;
+  }
 
   async saveToken(token: SaveTokenDto): Promise<string> {
     return await this.usersRepository.saveToken(token);
