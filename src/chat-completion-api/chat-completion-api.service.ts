@@ -17,7 +17,7 @@ export class ChatCompletionApiService {
   private readonly chat: ChatOpenAI;
 
   constructor() {
-    this.chatManager = new ChatHistoryManager('한국말로만 대답하세요');
+    this.chatManager = new ChatHistoryManager('한국말로만 대답해주세요');
     this.chat = new ChatOpenAI({
       temperature: DEFAULT_TEMPERATURE,
       openAIApiKey: process.env.OPENAI_KEY,
@@ -59,7 +59,7 @@ export class ChatCompletionApiService {
   }
 
   private createReportPrompt(keyword: string): string {
-    return `제가 하루동안 검색한 ${keyword}를 바탕으로 개발과 관련된 글을 작성하려고 합니다. 적절한 제목을 선정하여 글의 양식만 예시와 같이 작성해주세요. 글의 마지막에는 한줄 뛰고 기울임 글씨체로 명언 문구만 넣어주세요.
+    return `제가 하루동안 검색한 ${keyword}를 바탕으로 개발과 관련된 글을 작성하려고 합니다. 적절한 제목을 선정하여 글의 형식을 예시와 같이 작성해주세요. 글의 마지막에는 한줄 뛰고 기울임 글씨체로 명언 문구만 넣어주세요.
     예시:
     ### 1. Emmet 소개
     - OAuth 프로토콜 흐름
