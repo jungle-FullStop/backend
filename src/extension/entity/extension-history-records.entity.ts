@@ -12,7 +12,13 @@ export class ExtensionHistoryRecords {
   visitedURL: string; // 방문한 URL
 
   @Column('text')
+  thumbnail: string; // 썸네일 URL
+
+  @Column('text')
   rawData: string; // 가공 전 데이터
+
+  @Column('text')
+  description: string; // 데이터 설명
 
   @Column('text')
   processedTitle: string; // 가공 후 검색 태그

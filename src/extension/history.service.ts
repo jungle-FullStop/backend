@@ -19,16 +19,18 @@ export class HistoryService {
     const aiData = await this.chatService.processExtenstionData(dto);
     const processTitle = this.preprocess(dto.title);
     const processData = this.removeSybols(aiData);
-    console.log(dto);
+
     const extensionHistoryRecord = this.historyRepository.create({
       userId: dto.userId,
       visitedURL: dto.url,
+      thumbnail: dto.thumbnail,
       rawData: dto.title,
+      description: dto.description,
       processedTitle: processTitle,
       processedData: processData,
     });
 
-    this.historyRepository.save(extensionHistoryRecord);
+    await this.historyRepository.save(extensionHistoryRecord);
     return processData;
   }
 
@@ -108,7 +110,9 @@ export class HistoryService {
       return {
         id: record.id,
         rawData: record.rawData,
+        description: record.description,
         visitedURL: record.visitedURL,
+        thumbnail: record.thumbnail,
         createdAt: record.timestamp,
       };
     });
@@ -120,6 +124,8 @@ export class HistoryService {
     keyword: string,
   ): Promise<SearchHistroyResponseDto[]> {
     const records = await this.getHistoryById(userId);
-    return records.filter((record) => record.rawData.includes(keyword));
+    return records.filter((record) =>
+      record.rawData.toLowerCase().includes(keyword.toLowerCase()),
+    );
   }
 }

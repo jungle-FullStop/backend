@@ -1,7 +1,6 @@
 import { DataSource, Repository } from 'typeorm';
 import { ExtensionHistoryRecords } from './entity/extension-history-records.entity';
 import { Injectable } from '@nestjs/common';
-import { User } from '../users/entity/user.entity';
 
 @Injectable()
 export class HistoryRepository extends Repository<ExtensionHistoryRecords> {
