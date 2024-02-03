@@ -117,6 +117,7 @@ export class MindmapService {
 
     // DB에 저장
     return await this.mindmapRepository.saveMindmap(
+      userId,
       JSON.stringify(mindmap),
       fromDate,
     );

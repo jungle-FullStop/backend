@@ -1,48 +1,27 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, UseGuards } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { User } from 'src/users/utils/user.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
+import { User as UserEntity } from '../users/entity/user.entity';
 
 @Controller('report')
 export class ReportController {
-  constructor(private readonly reportservice: ReportService) {}
+  constructor(private readonly reportService: ReportService) {}
 
-  @Get('/find/:userId')
-  async findById(@Param('userId') userId: number) {
+  @Get('/find')
+  @UseGuards(JwtAuthGuard)
+  async findById(@User() user: UserEntity) {
     const fromDate = new Date();
     // console.log(fromDate);
     fromDate.setHours(0, 0, 0, 0);
-    return await this.reportservice.findById(userId, fromDate);
+    return await this.reportService.findById(user.id, fromDate);
   }
 
-  @Get('/create/:userId')
-  async createSaveReport(@Param('userId') userId: number) {
-    const fromDate = new Date(); // 나중에 파라미터로 받아야할 듯?
+  @Get('/create')
+  @UseGuards(JwtAuthGuard)
+  async createSaveReport(@User() user: UserEntity) {
+    const fromDate = new Date();
     // console.log(fromDate);
-    return await this.reportservice.createSaveReport(userId, fromDate);
+    return await this.reportService.createSaveReport(user.id, fromDate);
   }
-
-  //   @Post()
-  //   create(@Body() createReportDto: CreateReportDto) {
-  //     return this.reportService.create(createReportDto);
-  //   }
-
-  //   @Get()
-  //   findAll() {
-  //     return this.reportService.findAll();
-  //   }
-
-  //   @Get(':id')
-  //   findOne(@Param('id') id: string) {
-  //     return this.reportService.findOne(+id);
-  //   }
-
-  //   @Patch(':id')
-  //   update(@Param('id') id: string, @Body() updateReportDto: UpdateReportDto) {
-  //     return this.reportService.update(+id, updateReportDto);
-  //   }
-
-  //   @Delete(':id')
-  //   remove(@Param('id') id: string) {
-  //     return this.reportService.remove(+id);
-  //   }
 }

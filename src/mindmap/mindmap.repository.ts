@@ -15,9 +15,13 @@ export class MindmapRepository extends Repository<Mindmap> {
     });
   }
 
-  async saveMindmap(mindmap: string, fromDate: Date): Promise<Mindmap> {
+  async saveMindmap(
+    userId: number,
+    mindmap: string,
+    fromDate: Date,
+  ): Promise<Mindmap> {
     const mindmapRecord = this.create({
-      userId: 1,
+      userId: userId,
       data: mindmap,
       timestamp: fromDate,
     });
