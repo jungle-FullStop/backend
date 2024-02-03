@@ -8,4 +8,6 @@ export const exceptKeyword = [
   '및',
   'FEAT',
   '적용',
+  '대해',
+  '총',
 ];

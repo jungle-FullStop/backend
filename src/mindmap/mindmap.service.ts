@@ -34,13 +34,7 @@ export class MindmapService {
       .toUpperCase()
       .split(', ');
 
-    const processedData = searchHistory
-      .map((keyword) => keyword.processedData)
-      .join(', ')
-      .toUpperCase()
-      .split(', ');
-
-    let totalKeywords = [...processedTitle, ...processedData];
+    let totalKeywords = [...processedTitle];
     totalKeywords = totalKeywords.filter((ele) => !exceptKeyword.includes(ele));
     // const TOTALCNT = totalKeywords.length;
 

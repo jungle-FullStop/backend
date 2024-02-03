@@ -5,6 +5,8 @@ import { HistoryRepository } from './history.repository';
 import { ExtensionHistoryRecords } from './entity/extension-history-records.entity';
 import { stopwords } from './utils/stopwords';
 import { addDays } from 'date-fns';
+import { SearchHistroyResponseDto } from './dto/history.dto';
+import { SearchUserResponseDto } from '../users/dto/user.dto';
 
 @Injectable()
 export class HistoryService {
@@ -17,7 +19,7 @@ export class HistoryService {
     const aiData = await this.chatService.processExtenstionData(dto);
     const processTitle = this.preprocess(dto.title);
     const processData = this.removeSybols(aiData);
-
+    console.log(dto);
     const extensionHistoryRecord = this.historyRepository.create({
       userId: dto.userId,
       visitedURL: dto.url,
@@ -97,5 +99,27 @@ export class HistoryService {
     const return_data = this.historyRepository.find();
 
     return return_data;
+  }
+
+  async getHistoryById(userId: number) {
+    const records = await this.historyRepository.findById(userId);
+
+    const res: SearchHistroyResponseDto[] = records.map((record) => {
+      return {
+        id: record.id,
+        rawData: record.rawData,
+        visitedURL: record.visitedURL,
+        createdAt: record.timestamp,
+      };
+    });
+    return res;
+  }
+
+  async searchHistory(
+    userId: number,
+    keyword: string,
+  ): Promise<SearchHistroyResponseDto[]> {
+    const records = await this.getHistoryById(userId);
+    return records.filter((record) => record.rawData.includes(keyword));
   }
 }

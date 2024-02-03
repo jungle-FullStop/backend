@@ -49,7 +49,7 @@ export class FriendsController {
     return '친구가 삭제되었습니다.';
   }
 
-  @Get('request/:userId')
+  @Get('/request/:userId')
   @UseGuards(JwtAuthGuard)
   async getFriendRequestList(
     @Param('userId', ParseIntPipe) userId: number,
@@ -59,7 +59,7 @@ export class FriendsController {
     return { strangers };
   }
 
-  @Post('request/:receiverId')
+  @Post('/request/:receiverId')
   @UseGuards(JwtAuthGuard)
   async requestFriend(
     @User() user: UserEntity,
@@ -70,7 +70,7 @@ export class FriendsController {
     return '친구 신청이 완료되었습니다.';
   }
 
-  @Delete('request/:receiverId')
+  @Delete('/request/:receiverId')
   @UseGuards(JwtAuthGuard)
   async cancelFriendRequest(
     @User() user: UserEntity,
@@ -84,7 +84,7 @@ export class FriendsController {
     return '친구 신청이 취소되었습니다.';
   }
 
-  @Post('allow/:senderId')
+  @Post('/allow/:senderId')
   @UseGuards(JwtAuthGuard)
   async allowFriendRequest(
     @User() user: UserEntity,
@@ -97,7 +97,7 @@ export class FriendsController {
     return '친구 신청을 수락했습니다.';
   }
 
-  @Delete('allow/:senderId')
+  @Delete('/allow/:senderId')
   @UseGuards(JwtAuthGuard)
   async rejectFriendRequest(
     @User() user: UserEntity,
@@ -110,7 +110,7 @@ export class FriendsController {
     return '친구 신청을 거절했습니다.';
   }
 
-  @Get('search/:name')
+  @Get('/search/:name')
   @UseGuards(JwtAuthGuard)
   async searchFriend(
     @User() user: UserEntity,
