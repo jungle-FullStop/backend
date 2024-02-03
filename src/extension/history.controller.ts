@@ -16,7 +16,8 @@ export class HistoryController {
     @Body() extensionHistoryDto: ExtensionHistoryDto,
     @User() user: UserEntity,
   ) {
-    console.log('USER : ', user);
+    // console.log('USER : ', user);
+    // console.log('EXTENSION HISTORY : ', extensionHistoryDto);
     extensionHistoryDto.userId = user.id.toString();
     await this.service.handleExtensionHistory(extensionHistoryDto);
   }

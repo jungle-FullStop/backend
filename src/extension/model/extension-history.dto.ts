@@ -4,8 +4,14 @@ export class ExtensionHistoryDto {
   @IsUrl()
   url: string;
 
+  @IsUrl()
+  thumbnail: string;
+
   @IsString()
   title: string;
+
+  @IsString()
+  description: string;
 
   @IsArray()
   @IsString({ each: true })
