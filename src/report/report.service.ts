@@ -18,7 +18,7 @@ export class ReportService {
     return await this.reportRepository.findById(userId);
   }
 
-  async createSaveReport(userId: number, fromDate: Date): Promise<string> {
+  async createSaveReport(userId: number, fromDate: Date): Promise<Report> {
     // 여기서 userId를 사용하여 DB에서 해당 사용자의 검색 기록을 가져온다고 가정
     const searchHistory = await this.historyservice.getSearchHistoryByUserId(
       userId,

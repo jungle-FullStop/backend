@@ -35,13 +35,13 @@ export class ReportRepository extends Repository<Report> {
     return latestReport;
   }
 
-  async saveReport(report: string, fromDate: Date): Promise<string> {
+  async saveReport(report: string, fromDate: Date): Promise<Report> {
     const reportRecord = this.create({
       userId: 1,
       report: report,
       timestamp: fromDate,
     });
     this.save(reportRecord);
-    return report;
+    return reportRecord;
   }
 }

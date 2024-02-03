@@ -79,6 +79,7 @@ export class TeamRepository extends Repository<Team> {
       .select('user.id', 'id')
       .addSelect('user.name', 'name')
       .addSelect('user.profileImage', 'profileImage')
+      .addSelect('user.tilScore', 'tilScore')
       .addSelect(
         `
       CASE 
@@ -98,6 +99,7 @@ export class TeamRepository extends Repository<Team> {
       name: user.name,
       status: user.userStatus,
       profileImage: user.profileImage,
+      tilScore: user.tilScore,
       // 다른 필요한 필드들...
     }));
   }
