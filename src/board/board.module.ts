@@ -5,9 +5,10 @@ import { BoardController } from './board.controller';
 import { BoardService } from './board.service';
 import { BoardRepository } from './board.repository';
 import { UsersModule } from 'src/users/users.module';
+import { TeamModule } from 'src/team/team.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Board]), UsersModule],
+  imports: [TypeOrmModule.forFeature([Board]), UsersModule, TeamModule],
   controllers: [BoardController],
   providers: [BoardService, BoardRepository],
 })

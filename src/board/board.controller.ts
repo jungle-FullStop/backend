@@ -14,12 +14,14 @@ import { UsersService } from 'src/users/users.service';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 import { User } from '../users/utils/user.decorator';
 import { User as UserEntity } from '../users/entity/user.entity';
+import { TeamService } from 'src/team/team.service';
 
 @Controller('board')
 export class BoardController {
   constructor(
     private boardService: BoardService,
     private userService: UsersService,
+    private teamService: TeamService,
   ) {}
 
   @Post('/create')
@@ -35,15 +37,15 @@ export class BoardController {
     return await this.boardService.findAll();
   }
 
-  @Get('/find/:userId/:date?')
+  @Get('/find/:userId/:date?') // 전체 Til 가져오기, 개인 해당월 잔디용
   async findById(@Param('userId') userId: number, @Param('date') date?: Date) {
+    const user = await this.userService.findUserById(userId);
+    const profileImage = user.profileImage;
+    const name = user.name;
     if (date) {
-      return await this.boardService.findByDate(userId, date);
+      const boards = await this.boardService.findByMonth(userId, date);
+      return { user: { profileImage, name }, boards };
     } else {
-      const user = await this.userService.findUserById(userId);
-      const profileImage = user.profileImage;
-      const name = user.name;
-
       const boards = await this.boardService.findOneForDate(userId);
       return { user: { profileImage, name }, boards };
     }
