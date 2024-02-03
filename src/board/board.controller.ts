@@ -14,14 +14,12 @@ import { UsersService } from 'src/users/users.service';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 import { User } from '../users/utils/user.decorator';
 import { User as UserEntity } from '../users/entity/user.entity';
-import { TeamService } from 'src/team/team.service';
 
 @Controller('board')
 export class BoardController {
   constructor(
     private boardService: BoardService,
     private userService: UsersService,
-    private teamService: TeamService,
   ) {}
 
   @Post('/create')

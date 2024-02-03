@@ -1,7 +1,7 @@
 import { BoardRepository } from './board.repository';
 import { Injectable } from '@nestjs/common';
 import { Board } from './entity/board.entity';
-import { addDays, endOfMonth, getMonth, getYear, startOfMonth } from 'date-fns';
+import { getMonth, getYear } from 'date-fns';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TeamStatusEvent } from '../team/events/team-status.event';
 import { TeamStreamDto } from '../team/dto/team.dto';
