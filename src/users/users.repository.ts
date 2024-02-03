@@ -88,4 +88,12 @@ export class UsersRepository extends Repository<User> {
       .where('user.name LIKE :name', { name: `%${name}%` })
       .getMany();
   }
+
+  async updateTilScore(userId: number, score: number): Promise<void> {
+    await this.createQueryBuilder('user')
+      .update(User)
+      .set({ tilScore: score })
+      .where('user.id = :id', { id: userId })
+      .execute();
+  }
 }

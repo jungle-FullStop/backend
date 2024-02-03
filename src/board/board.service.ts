@@ -6,20 +6,26 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TeamStatusEvent } from '../team/events/team-status.event';
 import { TeamStreamDto } from '../team/dto/team.dto';
 import { User as UserEntity } from '../users/entity/user.entity';
+import { UsersRepository } from '../users/users.repository';
 
 @Injectable()
 export class BoardService {
   constructor(
     private boardRepository: BoardRepository,
+    private usersRepository: UsersRepository,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
   async createBoard(userId: number, contents: string, user: UserEntity) {
+    const today = new Date();
     await this.boardRepository.save({
       userId: userId,
       contents: contents,
-      timestamp: new Date(),
+      timestamp: today,
     });
+
+    const score = (await this.findByMonth(userId, today)).length;
+    await this.usersRepository.updateTilScore(userId, score);
 
     const streamDTO: TeamStreamDto = {
       userId,
@@ -94,7 +100,7 @@ export class BoardService {
   // }
 
   async findOneForDate(userId: number): Promise<Board[]> {
-    const latestPosts: Board[] = await this.boardRepository
+    return await this.boardRepository
       .createQueryBuilder('board')
       .where('userId = :userId', { userId })
       .groupBy('DATE(board.timestamp)') // 날짜별로 그룹화
@@ -104,7 +110,6 @@ export class BoardService {
       .addSelect('MAX(board.timestamp) as timestamp')
       // .orderBy('MAX(board.timestamp)', 'DESC')
       .getRawMany();
-    return latestPosts;
   }
 
   async updateBoard(userId: number, boardId: number, contents: string) {
