@@ -72,7 +72,8 @@ export class TeamController {
     @User() user: UserEntity,
     @Body() deleteMemberDto: DeleteMemberDto,
   ) {
-    return await this.teamService.deleteMember(user.teamCode);
+    const id = Number(deleteMemberDto.id);
+    return await this.teamService.exileMember(id);
   }
 
   @Delete('/delete')

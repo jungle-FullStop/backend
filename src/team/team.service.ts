@@ -106,7 +106,9 @@ export class TeamService {
     return this.sortByRank(members);
   }
 
-  async deleteMember(teamCode: string) {}
+  async exileMember(memberId: number) {
+    return this.usersRepository.updateTeamCode(memberId, 'default');
+  }
 
   async deleteTeam(teamCode: string) {
     return await this.teamRepository.delete({ code: teamCode });

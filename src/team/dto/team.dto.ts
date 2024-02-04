@@ -5,7 +5,7 @@ export class TeamDto {
 }
 
 export class DeleteMemberDto {
-  memberName: string;
+  id: string;
 }
 
 export class TeamStreamDto {
