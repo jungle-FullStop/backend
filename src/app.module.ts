@@ -13,7 +13,6 @@ import { MindmapModule } from './mindmap/mindmap.module';
 import { BoardModule } from './board/board.module';
 import { TeamModule } from './team/team.module';
 import { FriendsModule } from './friends/friends.module';
-import { MemberModule } from './member/member.module';
 import { FirebaseModule } from './firebase/firebase.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { eventEmitterConfig } from '../configs/event-emitter.config';
@@ -34,10 +33,8 @@ import { TeamtrackingModule } from '@app/teamtracking';
     BoardModule,
     TeamModule,
     FriendsModule,
-    MemberModule,
     FirebaseModule,
     TeamtrackingModule,
-
   ],
   controllers: [],
   providers: [],

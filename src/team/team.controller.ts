@@ -10,13 +10,14 @@ import {
   Sse,
   UseGuards,
 } from '@nestjs/common';
-import { TeamDto } from './dto/team.dto';
+import { DeleteMemberDto, TeamDto } from './dto/team.dto';
 import { map, startWith } from 'rxjs';
 import { TeamTrackingService } from '@app/teamtracking';
 import { TeamStatusEvent } from './events/team-status.event';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 import { User } from '../users/utils/user.decorator';
 import { User as UserEntity } from '../users/entity/user.entity';
+import { SearchUserResponseDto } from '../users/dto/user.dto';
 
 @Controller('team')
 export class TeamController {
@@ -53,16 +54,40 @@ export class TeamController {
     return await this.teamService.findTeam(teamCode);
   }
 
-  @Post('/my')
+  @Post('/member')
   @UseGuards(JwtAuthGuard)
-  async findMyTeamUsers(@User() user: UserEntity) {
-    return await this.teamService.findMyTeamUsers(user.teamCode);
+  async getMemberList(@User() user: UserEntity) {
+    return await this.teamService.findMemberList(user.teamCode);
+  }
+
+  @Post('/rank')
+  @UseGuards(JwtAuthGuard)
+  async getMemberRankList(@User() user: UserEntity) {
+    return await this.teamService.findMemberRankList(user.teamCode);
+  }
+
+  @Post('/exile')
+  @UseGuards(JwtAuthGuard)
+  async deleteMember(
+    @User() user: UserEntity,
+    @Body() deleteMemberDto: DeleteMemberDto,
+  ) {
+    return await this.teamService.deleteMember(user.teamCode);
   }
 
   @Delete('/delete')
   @UseGuards(JwtAuthGuard)
   async deleteTeam(@User() user: UserEntity) {
     return await this.teamService.deleteTeam(user.teamCode);
+  }
+
+  @Get('/search/:name')
+  @UseGuards(JwtAuthGuard)
+  async searchFriend(
+    @User() user: UserEntity,
+    @Param('name') name: string,
+  ): Promise<SearchUserResponseDto[]> {
+    return this.teamService.searchMember(user.teamCode, name);
   }
 
   @UseGuards(JwtAuthGuard)

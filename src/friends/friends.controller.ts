@@ -24,7 +24,6 @@ export class FriendsController {
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<Record<string, SearchUserResponseDto[]>> {
     const friends = await this.friendsService.getFriendsList(userId);
-
     return { friends };
   }
 
@@ -34,7 +33,6 @@ export class FriendsController {
     @Param('userId', ParseIntPipe) userId: number,
   ): Promise<Record<string, SearchUserResponseDto[]>> {
     const friends = await this.friendsService.getFriendsRankList(userId);
-
     return { friends };
   }
 

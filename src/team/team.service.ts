@@ -7,6 +7,9 @@ import { TeamRepository } from './team.repository';
 import { UsersRepository } from '../users/users.repository';
 import { User as UserEntity } from '../users/entity/user.entity';
 import { Team } from './entities/team.entity';
+import { SearchUserResponseDto } from '../users/dto/user.dto';
+import { StrangerResponseDto } from '../friends/dto/friend.dto';
+import { SortedUsersType } from '../friends/utils/friendsType';
 
 @Injectable()
 export class TeamService {
@@ -93,12 +96,48 @@ export class TeamService {
     });
   }
 
-  async findMyTeamUsers(teamCode: string) {
-    return await this.teamRepository.getMyTeamUsers(teamCode);
+  async findMemberList(teamCode: string) {
+    const members = await this.teamRepository.getMyTeamUsers(teamCode);
+    return this.sortByName(members);
   }
+
+  async findMemberRankList(teamCode: string) {
+    const members = await this.teamRepository.getMyTeamUsers(teamCode);
+    return this.sortByRank(members);
+  }
+
+  async deleteMember(teamCode: string) {}
 
   async deleteTeam(teamCode: string) {
     return await this.teamRepository.delete({ code: teamCode });
+  }
+
+  async searchMember(
+    teamCode: string,
+    name: string,
+  ): Promise<SearchUserResponseDto[]> {
+    const members = await this.findMemberList(teamCode);
+    return members.filter((friend) => friend.name.includes(name));
+  }
+
+  private sortByName<T extends SearchUserResponseDto[] | StrangerResponseDto[]>(
+    users: T,
+  ): SortedUsersType<T> {
+    return users.sort((a, b) => {
+      const nameA = a.name.toUpperCase();
+      const nameB = b.name.toUpperCase();
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
+      return 0;
+    }) as SortedUsersType<T>;
+  }
+
+  private sortByRank<T extends SearchUserResponseDto[] | StrangerResponseDto[]>(
+    users: T,
+  ): SortedUsersType<T> {
+    return users.sort((a, b) => {
+      return b.tilScore - a.tilScore;
+    }) as SortedUsersType<T>;
   }
 
   // subscribe(userId: string): Observable<MessageEvent> {

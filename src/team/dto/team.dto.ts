@@ -4,6 +4,10 @@ export class TeamDto {
   description: string;
 }
 
+export class DeleteMemberDto {
+  memberName: string;
+}
+
 export class TeamStreamDto {
   userId: number;
   status: string;

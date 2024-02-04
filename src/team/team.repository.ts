@@ -78,6 +78,7 @@ export class TeamRepository extends Repository<Team> {
       )
       .select('user.id', 'id')
       .addSelect('user.name', 'name')
+      .addSelect('user.email', 'email')
       .addSelect('user.profileImage', 'profileImage')
       .addSelect('user.tilScore', 'tilScore')
       .addSelect(
@@ -97,6 +98,7 @@ export class TeamRepository extends Repository<Team> {
     return userlist.map((user) => ({
       id: user.id,
       name: user.name,
+      email: user.email,
       status: user.userStatus,
       profileImage: user.profileImage,
       tilScore: user.tilScore,
