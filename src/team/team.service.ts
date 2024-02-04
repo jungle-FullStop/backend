@@ -6,6 +6,7 @@ import { TeamStreamDto } from './dto/team.dto';
 import { TeamRepository } from './team.repository';
 import { UsersRepository } from '../users/users.repository';
 import { User as UserEntity } from '../users/entity/user.entity';
+import { Team } from './entities/team.entity';
 
 @Injectable()
 export class TeamService {
@@ -57,18 +58,33 @@ export class TeamService {
     return await this.teamRepository.getTeamStatusListFromRedis(teamCode);
   }
 
-  async createTeam(userId: number, teamName: string) {
-    const teamCode = Math.random().toString(36).substr(2, 8);
-    console.log(teamCode);
-    await this.teamRepository.save({
+  async createTeam(
+    userId: number,
+    teamName: string,
+    teamDescription: string,
+  ): Promise<Team> {
+    const teamCode = Math.random().toString(36).substr(2, 8).toUpperCase();
+    const team = await this.teamRepository.save({
       name: teamName,
       code: teamCode,
+      description: teamDescription,
     });
-    return await this.usersRepository.updateTeamCode(userId, teamCode);
+    if (team) {
+      await this.usersRepository.updateTeamCode(userId, teamCode);
+    }
+    return await this.teamRepository.findOne({
+      where: { code: teamCode },
+    });
   }
 
-  async joinTeam(userId: number, teamCode: string) {
-    return await this.usersRepository.updateTeamCode(userId, teamCode);
+  async joinTeam(userId: number, teamCode: string): Promise<Team> {
+    const team = await this.teamRepository.findOne({
+      where: { code: teamCode },
+    });
+    if (team) {
+      await this.usersRepository.updateTeamCode(userId, teamCode);
+    }
+    return team;
   }
 
   async findTeam(teamCode: string) {
