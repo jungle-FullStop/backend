@@ -1,6 +1,5 @@
 // import { EventEmitter2 } from 'eventemitter2';
-import { fromEvent, map, Observable } from 'rxjs';
-import { Injectable, MessageEvent } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TeamStatusEvent } from './events/team-status.event';
 import { TeamStreamDto } from './dto/team.dto';
@@ -62,7 +61,6 @@ export class TeamService {
     await this.teamRepository.save({
       name: teamName,
       code: teamCode,
-      timestamp: new Date(),
     });
     return await this.usersRepository.updateTeamCode(userId, teamCode);
   }

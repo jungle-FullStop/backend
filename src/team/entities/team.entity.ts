@@ -20,6 +20,9 @@ export class Team extends BaseEntity {
   user: User;
 
   @Column()
+  code: string;
+
+  @Column()
   name: string;
 
   @Column('text', { nullable: true })

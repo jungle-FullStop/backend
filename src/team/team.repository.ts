@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { Team } from './entity/team.entity';
+import { Team } from './entities/team.entity';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import Redis from 'ioredis';
 import { Board } from '../board/entity/board.entity';
@@ -114,4 +114,9 @@ export class TeamRepository extends Repository<Team> {
   }
 
   // 해당 팀코드에 해당되는 유저 전부 불러오기
+  async findTeam(teamCode: string) {
+    return await this.findOne({
+      where: { code: teamCode },
+    });
+  }
 }

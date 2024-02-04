@@ -4,13 +4,14 @@ import {
   Controller,
   Delete,
   Get,
+  Param,
   Post,
   Query,
   Sse,
   UseGuards,
 } from '@nestjs/common';
-import { TeamDeleteDto, TeamDto, TeamFindDto } from './dto/team.dto';
-import { interval, map, Observable, startWith } from 'rxjs';
+import { TeamDto } from './dto/team.dto';
+import { map, startWith } from 'rxjs';
 import { TeamTrackingService } from '@app/teamtracking';
 import { TeamStatusEvent } from './events/team-status.event';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
@@ -21,27 +22,30 @@ import { User as UserEntity } from '../users/entity/user.entity';
 export class TeamController {
   constructor(
     private teamService: TeamService,
-    private readonly teamtrackingService: TeamTrackingService,
+    private readonly teamTrackingService: TeamTrackingService,
   ) {}
 
   @Post('/create')
-  async createTeam(@Body() teamDto: TeamDto) {
-    const userId = teamDto.userId;
+  @UseGuards(JwtAuthGuard)
+  async createTeam(@User() user: UserEntity, @Body() teamDto: TeamDto) {
     const teamName = teamDto.name;
     const teamCode = teamDto.code;
-    return await this.teamService.createTeam(userId, teamName, teamCode);
+    return await this.teamService.createTeam(user.id, teamName, teamCode);
   }
 
   @Post('/join')
-  async joinTeam(@Body() teamDto: TeamDto) {
-    const userId = teamDto.userId;
+  @UseGuards(JwtAuthGuard)
+  async joinTeam(@User() user: UserEntity, @Body() teamDto: TeamDto) {
     const teamCode = teamDto.code;
-    return await this.teamService.joinTeam(userId, teamCode);
+    return await this.teamService.joinTeam(user.id, teamCode);
   }
 
-  @Post('/find')
-  async findTeam(@Body() teamFindDto: TeamFindDto) {
-    const teamCode = teamFindDto.code;
+  @Get('/:teamCode')
+  @UseGuards(JwtAuthGuard)
+  async findTeam(
+    @User() user: UserEntity,
+    @Param('teamCode') teamCode: string,
+  ) {
     return await this.teamService.findTeam(teamCode);
   }
 
@@ -52,10 +56,9 @@ export class TeamController {
   }
 
   @Delete('/delete')
-  async deleteTeam(@Body() teamDeleteDto: TeamDeleteDto) {
-    // const userId = teamDeleteDto.userId;
-    const teamCode = teamDeleteDto.code;
-    return await this.teamService.deleteTeam(teamCode);
+  @UseGuards(JwtAuthGuard)
+  async deleteTeam(@User() user: UserEntity) {
+    return await this.teamService.deleteTeam(user.teamCode);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -67,7 +70,7 @@ export class TeamController {
     );
 
     // 2. 현재 상태를 포함한 SSE 스트림 반환
-    return this.teamtrackingService.streamTeamStatus(user.teamCode).pipe(
+    return this.teamTrackingService.streamTeamStatus(user.teamCode).pipe(
       startWith({ data: currentStatus }), // 현재 상태를 스트림의 첫 이벤트로 설정
       map((status) => ({ data: status })), // 이후 업데이트를 스트림으로 전송
     );
@@ -97,7 +100,7 @@ export class TeamController {
 // export class TeamController {
 //   constructor(
 //     private readonly teamService: TeamService,
-//     private readonly teamtrackingService: TeamTrackingService,
+//     private readonly teamTrackingService: TeamTrackingService,
 //   ) {}
 //
 //   // @Sse('status')
@@ -110,7 +113,7 @@ export class TeamController {
 //
 //   @Sse(TeamStatusEvent.EVENT_NAME)
 //   sseTeamStatus() {
-//     return this.teamtrackingService.streamTeamStatus(
+//     return this.teamTrackingService.streamTeamStatus(
 //       TeamStatusEvent.EVENT_NAME,
 //       1,
 //     );
