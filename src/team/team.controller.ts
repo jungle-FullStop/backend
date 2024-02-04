@@ -29,8 +29,7 @@ export class TeamController {
   @UseGuards(JwtAuthGuard)
   async createTeam(@User() user: UserEntity, @Body() teamDto: TeamDto) {
     const teamName = teamDto.name;
-    const teamCode = teamDto.code;
-    return await this.teamService.createTeam(user.id, teamName, teamCode);
+    return await this.teamService.createTeam(user.id, teamName);
   }
 
   @Post('/join')

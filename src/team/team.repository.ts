@@ -92,7 +92,7 @@ export class TeamRepository extends Repository<Team> {
       .groupBy('user.id')
       .getRawMany();
 
-    console.log(userlist);
+    // console.log(userlist);
     // 결과 포맷을 정리하여 반환
     return userlist.map((user) => ({
       id: user.id,

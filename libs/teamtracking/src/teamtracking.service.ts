@@ -19,7 +19,7 @@ export class TeamTrackingService {
     if (!this.teamStatusUpdates[statusKey]) {
       this.teamStatusUpdates[statusKey] = new Subject<string>();
     }
-    console.log(statusKey);
+    // console.log(statusKey);
     this.teamStatusUpdates[statusKey].next(status);
   }
 

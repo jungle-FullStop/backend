@@ -57,7 +57,9 @@ export class TeamService {
     return await this.teamRepository.getTeamStatusListFromRedis(teamCode);
   }
 
-  async createTeam(userId: number, teamName: string, teamCode: string) {
+  async createTeam(userId: number, teamName: string) {
+    const teamCode = Math.random().toString(36).substr(2, 8);
+    console.log(teamCode);
     await this.teamRepository.save({
       name: teamName,
       code: teamCode,

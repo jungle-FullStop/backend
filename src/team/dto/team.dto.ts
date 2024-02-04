@@ -1,6 +1,7 @@
 export class TeamDto {
   name: string;
   code: string;
+  description: string;
 }
 
 export class TeamStreamDto {
