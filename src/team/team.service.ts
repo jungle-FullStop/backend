@@ -1,12 +1,15 @@
 // import { EventEmitter2 } from 'eventemitter2';
-import { fromEvent, map, Observable } from 'rxjs';
-import { Injectable, MessageEvent } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TeamStatusEvent } from './events/team-status.event';
 import { TeamStreamDto } from './dto/team.dto';
 import { TeamRepository } from './team.repository';
 import { UsersRepository } from '../users/users.repository';
 import { User as UserEntity } from '../users/entity/user.entity';
+import { Team } from './entities/team.entity';
+import { SearchUserResponseDto } from '../users/dto/user.dto';
+import { StrangerResponseDto } from '../friends/dto/friend.dto';
+import { SortedUsersType } from '../friends/utils/friendsType';
 
 @Injectable()
 export class TeamService {
@@ -58,17 +61,33 @@ export class TeamService {
     return await this.teamRepository.getTeamStatusListFromRedis(teamCode);
   }
 
-  async createTeam(userId: number, teamName: string, teamCode: string) {
-    await this.teamRepository.save({
+  async createTeam(
+    userId: number,
+    teamName: string,
+    teamDescription: string,
+  ): Promise<Team> {
+    const teamCode = Math.random().toString(36).substr(2, 8).toUpperCase();
+    const team = await this.teamRepository.save({
       name: teamName,
       code: teamCode,
-      timestamp: new Date(),
+      description: teamDescription,
     });
-    return await this.usersRepository.updateTeamCode(userId, teamCode);
+    if (team) {
+      await this.usersRepository.updateTeamCode(userId, teamCode);
+    }
+    return await this.teamRepository.findOne({
+      where: { code: teamCode },
+    });
   }
 
-  async joinTeam(userId: number, teamCode: string) {
-    return await this.usersRepository.updateTeamCode(userId, teamCode);
+  async joinTeam(userId: number, teamCode: string): Promise<Team> {
+    const team = await this.teamRepository.findOne({
+      where: { code: teamCode },
+    });
+    if (team) {
+      await this.usersRepository.updateTeamCode(userId, teamCode);
+    }
+    return team;
   }
 
   async findTeam(teamCode: string) {
@@ -77,12 +96,50 @@ export class TeamService {
     });
   }
 
-  async findMyTeamUsers(teamCode: string) {
-    return await this.teamRepository.getMyTeamUsers(teamCode);
+  async findMemberList(teamCode: string) {
+    const members = await this.teamRepository.getMyTeamUsers(teamCode);
+    return this.sortByName(members);
+  }
+
+  async findMemberRankList(teamCode: string) {
+    const members = await this.teamRepository.getMyTeamUsers(teamCode);
+    return this.sortByRank(members);
+  }
+
+  async exileMember(memberId: number) {
+    return this.usersRepository.updateTeamCode(memberId, 'default');
   }
 
   async deleteTeam(teamCode: string) {
     return await this.teamRepository.delete({ code: teamCode });
+  }
+
+  async searchMember(
+    teamCode: string,
+    name: string,
+  ): Promise<SearchUserResponseDto[]> {
+    const members = await this.findMemberList(teamCode);
+    return members.filter((friend) => friend.name.includes(name));
+  }
+
+  private sortByName<T extends SearchUserResponseDto[] | StrangerResponseDto[]>(
+    users: T,
+  ): SortedUsersType<T> {
+    return users.sort((a, b) => {
+      const nameA = a.name.toUpperCase();
+      const nameB = b.name.toUpperCase();
+      if (nameA < nameB) return -1;
+      if (nameA > nameB) return 1;
+      return 0;
+    }) as SortedUsersType<T>;
+  }
+
+  private sortByRank<T extends SearchUserResponseDto[] | StrangerResponseDto[]>(
+    users: T,
+  ): SortedUsersType<T> {
+    return users.sort((a, b) => {
+      return b.tilScore - a.tilScore;
+    }) as SortedUsersType<T>;
   }
 
   // subscribe(userId: string): Observable<MessageEvent> {

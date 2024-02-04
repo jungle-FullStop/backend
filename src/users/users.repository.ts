@@ -59,7 +59,7 @@ export class UsersRepository extends Repository<User> {
       name,
       socialType,
       profileImage: picture,
-      teamCode: 'ABC',
+      teamCode: 'default',
       tilScore: 0,
     });
   }

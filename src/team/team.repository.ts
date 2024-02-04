@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { DataSource, Repository } from 'typeorm';
-import { Team } from './entity/team.entity';
+import { Team } from './entities/team.entity';
 import { InjectRedis } from '@liaoliaots/nestjs-redis';
 import Redis from 'ioredis';
 import { Board } from '../board/entity/board.entity';
@@ -78,6 +78,7 @@ export class TeamRepository extends Repository<Team> {
       )
       .select('user.id', 'id')
       .addSelect('user.name', 'name')
+      .addSelect('user.email', 'email')
       .addSelect('user.profileImage', 'profileImage')
       .addSelect('user.tilScore', 'tilScore')
       .addSelect(
@@ -92,11 +93,12 @@ export class TeamRepository extends Repository<Team> {
       .groupBy('user.id')
       .getRawMany();
 
-    console.log(userlist);
+    // console.log(userlist);
     // 결과 포맷을 정리하여 반환
     return userlist.map((user) => ({
       id: user.id,
       name: user.name,
+      email: user.email,
       status: user.userStatus,
       profileImage: user.profileImage,
       tilScore: user.tilScore,
@@ -114,4 +116,9 @@ export class TeamRepository extends Repository<Team> {
   }
 
   // 해당 팀코드에 해당되는 유저 전부 불러오기
+  async findTeam(teamCode: string) {
+    return await this.findOne({
+      where: { code: teamCode },
+    });
+  }
 }

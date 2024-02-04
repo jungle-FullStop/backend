@@ -1,16 +1,11 @@
 export class TeamDto {
-  userId: number;
   name: string;
   code: string;
+  description: string;
 }
 
-export class TeamFindDto {
-  code: string;
-}
-
-export class TeamDeleteDto {
-  userId: number;
-  code: string;
+export class DeleteMemberDto {
+  id: string;
 }
 
 export class TeamStreamDto {
