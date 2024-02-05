@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { google } from 'googleapis';
 import axios from 'axios';
 import { UsersRepository } from 'src/users/users.repository';
-import { SaveTokenDto } from './firebase.dto';
+import { SaveTokenDto } from './dto/firebase.dto';
 
 @Injectable()
 export class FirebaseCloudMessageService {
