@@ -12,11 +12,11 @@ export class GrassController {
   ) {}
 
   @Get('/:userId/:date') // 개인 해당월 잔디용
-  async findById(@Param('userId') userId: number, @Param('date') date: Date) {
+  async findById(@Param('userId') userId: number, @Param('date') date: string) {
     const user = await this.userService.findUserById(userId);
     const profileImage = user.profileImage;
     const name = user.name;
-    const boards = await this.boardService.findByMonth(userId, date);
+    const boards = await this.boardService.findByMonth(userId, new Date(date));
     return { user: { profileImage, name }, boards };
   }
 
@@ -26,14 +26,17 @@ export class GrassController {
     @Param('date') date: Date,
   ) {
     const user = await this.userService.findUserById(userId);
-    const teamuser = await this.teamService.findMemberList(user.teamCode);
+    const teamUser = await this.teamService.findMemberList(user.teamCode);
     const teamBoard = [];
-    for (const user of teamuser) {
+    for (const user of teamUser) {
       const userId = user.id;
       const profileImage = user.profileImage;
       const name = user.name;
 
-      const boards = await this.boardService.findByMonth(userId, date);
+      const boards = await this.boardService.findByMonth(
+        userId,
+        new Date(date),
+      );
       teamBoard.push({ user: { profileImage, name }, boards });
     }
     return teamBoard;
