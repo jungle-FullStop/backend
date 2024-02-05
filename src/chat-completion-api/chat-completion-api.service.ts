@@ -2,22 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { ChatHistoryManager } from './model/chat-history-manager';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { GetChatCompletionAnswerOutputDTO } from './model/chat-completion-answer.dto';
-// import { Repository } from 'typeorm';
-// import { SearchHistory } from './entity/search-history.entity';
-// import { InjectRepository } from '@nestjs/typeorm';
 import { ExtensionHistoryDto } from '../extension/model/extension-history.dto';
 import { CreateReportDto } from 'src/report/dto/create-report.dto';
+import { UpdateReportDto } from 'src/report/dto/update-report.dto';
 
 const DEFAULT_TEMPERATURE = 0.5;
 const DEFAULT_MODEL = 'gpt-3.5-turbo-1106';
 
 @Injectable()
 export class ChatCompletionApiService {
-  // private readonly chatManager: ChatHistoryManager;
+  private readonly chatManager: ChatHistoryManager;
   private readonly chat: ChatOpenAI;
 
   constructor() {
-    // this.chatManager = new ChatHistoryManager('한국말로만 대답해주세요');
+    this.chatManager = new ChatHistoryManager('한국말로만 대답해주세요');
     this.chat = new ChatOpenAI({
       temperature: DEFAULT_TEMPERATURE,
       openAIApiKey: process.env.OPENAI_KEY,
@@ -27,15 +25,28 @@ export class ChatCompletionApiService {
   }
 
   async getReport(data: CreateReportDto) {
-    const chatManager = new ChatHistoryManager('한국말로만 대답해주세요');
+    // const chatManager = new ChatHistoryManager('한국말로만 대답해주세요');
 
     const prompt = this.createReportPrompt(data.message);
-    chatManager.addHumanMessage(prompt);
-    const result = await this.chat.predictMessages(chatManager.chatHistory);
+    this.chatManager.addHumanMessage(prompt);
+    const result = await this.chat.predictMessages(
+      this.chatManager.chatHistory,
+    );
 
     const aiMessage = result.content;
 
-    chatManager.addAiMessage(aiMessage);
+    this.chatManager.addAiMessage(aiMessage);
+    return GetChatCompletionAnswerOutputDTO.getInstance(aiMessage);
+  }
+
+  async userPrompt(data: UpdateReportDto) {
+    const userPrompt = data.message;
+    this.chatManager.addHumanMessage(userPrompt);
+    const result = await this.chat.predictMessages(
+      this.chatManager.chatHistory,
+    );
+    const aiMessage = result.content;
+    this.chatManager.addAiMessage(aiMessage);
     return GetChatCompletionAnswerOutputDTO.getInstance(aiMessage);
   }
 

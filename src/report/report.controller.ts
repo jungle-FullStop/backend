@@ -1,8 +1,9 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { ReportService } from './report.service';
 import { User } from 'src/users/utils/user.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 import { User as UserEntity } from '../users/entity/user.entity';
+import { UpdateReportDto } from './dto/update-report.dto';
 
 @Controller('report')
 export class ReportController {
@@ -23,5 +24,10 @@ export class ReportController {
     const fromDate = new Date();
     // console.log(fromDate);
     return await this.reportService.createSaveReport(user.id, fromDate);
+  }
+
+  @Post('/custom')
+  async userPromptReport(@Body() updateReportDto: UpdateReportDto) {
+    return await this.reportService.userPromptReport(updateReportDto);
   }
 }

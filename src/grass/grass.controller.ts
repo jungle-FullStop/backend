@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { TeamService } from 'src/team/team.service';
 import { BoardService } from 'src/board/board.service';
@@ -18,7 +18,6 @@ export class GrassController {
   @Post('/users') // 개인 해당월 잔디용
   @UseGuards(JwtAuthGuard)
   async findUserGrass(@Body() grassDto: GrassDto, @User() user: UserEntity) {
-    // const user = await this.userService.findUserById(userId);
     const profileImage = user.profileImage;
     const name = user.name;
     const boards = await this.boardService.findByMonth(
@@ -31,7 +30,6 @@ export class GrassController {
   @Post('/team') // 팀 해당월 잔디용
   @UseGuards(JwtAuthGuard)
   async findTeamGrass(@Body() grassDto: GrassDto, @User() user: UserEntity) {
-    // const user = await this.userService.findUserById(userId);
     const teamMember = await this.teamService.findMemberList(user.teamCode);
     const teamBoard = [];
     for (const user of teamMember) {
