@@ -17,6 +17,7 @@ import { FirebaseModule } from './firebase/firebase.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { eventEmitterConfig } from '../configs/event-emitter.config';
 import { TeamtrackingModule } from '@app/teamtracking';
+import { GrassModule } from './grass/grass.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { TeamtrackingModule } from '@app/teamtracking';
     FriendsModule,
     FirebaseModule,
     TeamtrackingModule,
+    GrassModule,
   ],
   controllers: [],
   providers: [],
