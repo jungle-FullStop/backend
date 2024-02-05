@@ -16,10 +16,16 @@ export class BoardService {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  async createBoard(userId: number, contents: string, user: UserEntity) {
+  async createBoard(
+    userId: number,
+    teamCode: string,
+    title: string,
+    contents: string,
+  ) {
     const today = new Date();
     await this.boardRepository.save({
       userId: userId,
+      title: title,
       contents: contents,
       timestamp: today,
     });
@@ -30,7 +36,7 @@ export class BoardService {
     const streamDTO: TeamStreamDto = {
       userId,
       status: 'written', // 또는 상태를 업데이트합니다.
-      teamCode: user.teamCode,
+      teamCode: teamCode,
     };
 
     this.eventEmitter.emit(TeamStatusEvent.EVENT_NAME, streamDTO);

@@ -1,5 +1,5 @@
 export class BoardDto {
-  userId: number;
+  title: string;
   contents: string;
 }
 export class BoardUpdateDto {

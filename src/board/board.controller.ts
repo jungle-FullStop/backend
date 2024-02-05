@@ -25,9 +25,12 @@ export class BoardController {
   @Post('/create')
   @UseGuards(JwtAuthGuard)
   async createBoard(@Body() boardDto: BoardDto, @User() user: UserEntity) {
-    const userId = boardDto.userId;
-    const contents = boardDto.contents;
-    return await this.boardService.createBoard(userId, contents, user);
+    return await this.boardService.createBoard(
+      user.id,
+      user.teamCode,
+      boardDto.title,
+      boardDto.contents,
+    );
   }
 
   @Get('/find') // 전체 Til
