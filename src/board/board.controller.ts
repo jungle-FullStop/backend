@@ -30,23 +30,18 @@ export class BoardController {
     return await this.boardService.createBoard(userId, contents, user);
   }
 
-  @Get('/find')
+  @Get('/find') // 전체 Til
   async findAll() {
     return await this.boardService.findAll();
   }
 
-  @Get('/find/:userId/:date?') // 전체 Til 가져오기, 개인 해당월 잔디용
-  async findById(@Param('userId') userId: number, @Param('date') date?: Date) {
+  @Get('/find/:userId') // 해당 userId 전체 Til
+  async findById(@Param('userId') userId: number) {
     const user = await this.userService.findUserById(userId);
     const profileImage = user.profileImage;
     const name = user.name;
-    if (date) {
-      const boards = await this.boardService.findByMonth(userId, date);
-      return { user: { profileImage, name }, boards };
-    } else {
-      const boards = await this.boardService.findOneForDate(userId);
-      return { user: { profileImage, name }, boards };
-    }
+    const boards = await this.boardService.findOneForDate(userId);
+    return { user: { profileImage, name }, boards };
   }
 
   @Patch('/update')
