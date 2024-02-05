@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
 import { Response } from 'express';
 import { FirebaseCloudMessageService } from './firebase.service';
-import { PushMessageDto, SaveTokenDto } from './firebase.dto';
+import { PushMessageDto, SaveTokenDto } from './dto/firebase.dto';
 
 @Controller('push')
 export class FirebaseController {

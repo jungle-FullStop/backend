@@ -3,7 +3,7 @@ import { DataSource, Repository, UpdateResult } from 'typeorm';
 import { User } from './entity/user.entity';
 import { AuthUserDto } from 'src/auth/dto/auth.dto';
 import { SocialType } from './entity/socialType';
-import { SaveTokenDto } from 'src/firebase/firebase.dto';
+import { SaveTokenDto } from 'src/firebase/dto/firebase.dto';
 
 // import { endOfDay, startOfDay } from 'date-fns';
 
