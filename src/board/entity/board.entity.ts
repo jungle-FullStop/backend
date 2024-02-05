@@ -15,7 +15,10 @@ export class Board extends BaseEntity {
   @Column()
   userId: number;
 
-  @Column({ length: 10000 })
+  @Column()
+  title: string;
+
+  @Column('text')
   contents: string;
 
   @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
