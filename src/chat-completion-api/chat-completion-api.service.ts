@@ -9,7 +9,7 @@ import { ExtensionHistoryDto } from '../extension/model/extension-history.dto';
 import { CreateReportDto } from 'src/report/dto/create-report.dto';
 
 const DEFAULT_TEMPERATURE = 0.5;
-const DEFAULT_MODEL = 'gpt-3.5-turbo-1106';
+const DEFAULT_MODEL = 'gpt-3.5-turbo-0125';
 
 @Injectable()
 export class ChatCompletionApiService {
