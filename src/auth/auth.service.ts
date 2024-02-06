@@ -123,7 +123,7 @@ export class AuthService {
     const params = new URLSearchParams();
     params.append('client_id', process.env.GOOGLE_CLIENT_ID);
     params.append('client_secret', process.env.GOOGLE_CLIENT_SECRET);
-    params.append('redirect_uri', 'http://localhost:5173/auth');
+    params.append('redirect_uri', process.env.GOOGLE_REDIRCT_URL);
 
     if (!refreshToken) {
       params.append('grant_type', 'authorization_code');
