@@ -6,7 +6,6 @@ import { ExtensionHistoryRecords } from './entity/extension-history-records.enti
 import { stopwords } from './utils/stopwords';
 import { addDays } from 'date-fns';
 import { SearchHistroyResponseDto } from './dto/history.dto';
-import { SearchUserResponseDto } from '../users/dto/user.dto';
 
 @Injectable()
 export class HistoryService {
@@ -16,11 +15,25 @@ export class HistoryService {
   ) {}
 
   async handleExtensionHistory(dto: ExtensionHistoryDto): Promise<any> {
+    const { dayDate, nextDayDate } = this.getKoreaTime(new Date());
+    // 중복 데이터가 있으면 제거
+    const checkDup = await this.historyRepository
+      .createQueryBuilder('history')
+      .where('history.userId = :userId', { userId: dto.userId })
+      .andWhere('history.visitedURL = :url', { url: dto.url })
+      .andWhere(
+        'history.timestamp >= :dayDate AND history.timestamp < :nextDayDate',
+        { dayDate, nextDayDate },
+      )
+      .getOne();
+    if (checkDup) {
+      return;
+    }
+
     const aiData = await this.chatService.processExtenstionData(dto);
     const processTitle = this.preprocess(dto.title);
     const processData = this.removeSybols(aiData);
-
-    const extensionHistoryRecord = this.historyRepository.create({
+    await this.historyRepository.save({
       userId: dto.userId,
       visitedURL: dto.url,
       thumbnail: dto.thumbnail,
@@ -29,9 +42,6 @@ export class HistoryService {
       processedTitle: processTitle,
       processedData: processData,
     });
-
-    await this.historyRepository.save(extensionHistoryRecord);
-    return processData;
   }
 
   preprocess(tags: string): string {
@@ -50,11 +60,10 @@ export class HistoryService {
     // 특수기호 정규식
     const middleReg = /[`@#$%^&*()_|+\-=—;:'",<>\{\}\[\]\\\/]/gim;
     const endReg = /[`.~!?]/gim;
-    const preprocess: string = word
+    return word
       .replace(middleReg, ' ')
       .replace(endReg, '')
       .replace(/[0-9]/g, '');
-    return preprocess;
   }
 
   removeStopwords(word: string): string {
@@ -67,10 +76,7 @@ export class HistoryService {
     return word;
   }
 
-  async getSearchHistoryByUserId(
-    userId: number,
-    fromDate: Date,
-  ): Promise<ExtensionHistoryRecords[]> {
+  private getKoreaTime(fromDate: Date) {
     const offset = 1000 * 60 * 60 * 9;
     const koreaNow = new Date(new Date(fromDate).getTime() + offset);
     koreaNow.setUTCHours(0, 0, 0, 0);
@@ -81,6 +87,15 @@ export class HistoryService {
       .toISOString()
       .replace('T', ' ')
       .split('.')[0];
+
+    return { dayDate, nextDayDate };
+  }
+
+  async getSearchHistoryByUserId(
+    userId: number,
+    fromDate: Date,
+  ): Promise<ExtensionHistoryRecords[]> {
+    const { dayDate, nextDayDate } = this.getKoreaTime(fromDate);
 
     const searchHistory = await this.historyRepository
       .createQueryBuilder('history')
@@ -98,9 +113,7 @@ export class HistoryService {
   }
 
   async getHistory(): Promise<ExtensionHistoryRecords[]> {
-    const return_data = this.historyRepository.find();
-
-    return return_data;
+    return this.historyRepository.find();
   }
 
   async getHistoryById(userId: number) {
@@ -116,7 +129,8 @@ export class HistoryService {
         createdAt: record.timestamp,
       };
     });
-    return res;
+    // 최근 10개만 반환
+    return res.slice(0, 10);
   }
 
   async searchHistory(
