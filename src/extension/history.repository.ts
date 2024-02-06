@@ -11,6 +11,7 @@ export class HistoryRepository extends Repository<ExtensionHistoryRecords> {
   async findById(userId: number) {
     return await this.createQueryBuilder('history')
       .where('history.userId = :userId', { userId })
+      .orderBy('history.timestamp', 'DESC')
       .getMany();
   }
 }
