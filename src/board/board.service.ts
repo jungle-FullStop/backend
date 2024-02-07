@@ -1,11 +1,9 @@
 import { BoardRepository } from './board.repository';
 import { Injectable } from '@nestjs/common';
 import { Board } from './entity/board.entity';
-import { getMonth, getYear } from 'date-fns';
 import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TeamStatusEvent } from '../team/events/team-status.event';
 import { TeamStreamDto } from '../team/dto/team.dto';
-import { User as UserEntity } from '../users/entity/user.entity';
 import { UsersRepository } from '../users/users.repository';
 
 @Injectable()
