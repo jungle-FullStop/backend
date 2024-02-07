@@ -80,6 +80,7 @@ export class BoardService {
       .groupBy('DATE(board.timestamp)') // 날짜별로 그룹화
       .select('MAX(board.id) as id')
       .addSelect('board.userId')
+      .addSelect('MAX(board.title) as title')
       .addSelect('MAX(board.contents) as contents')
       .addSelect('MAX(board.timestamp) as timestamp')
       .getRawMany();
