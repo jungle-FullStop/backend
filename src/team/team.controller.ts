@@ -45,6 +45,21 @@ export class TeamController {
     return await this.teamService.joinTeam(user.id, teamCode);
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Sse(TeamStatusEvent.EVENT_NAME)
+  async sseTeamStatus(@User() user: UserEntity) {
+    // 1. 팀의 현재 상태를 가져오는 로직
+    const currentStatus = await this.teamService.getCurrentTeamStatus(
+      user.teamCode,
+    );
+
+    // 2. 현재 상태를 포함한 SSE 스트림 반환
+    return this.teamTrackingService.streamTeamStatus(user.teamCode).pipe(
+      startWith({ data: currentStatus }), // 현재 상태를 스트림의 첫 이벤트로 설정
+      map((status) => ({ data: status })), // 이후 업데이트를 스트림으로 전송
+    );
+  }
+
   @Get('/:teamCode')
   @UseGuards(JwtAuthGuard)
   async findTeam(
@@ -89,21 +104,6 @@ export class TeamController {
     @Param('name') name: string,
   ): Promise<SearchUserResponseDto[]> {
     return this.teamService.searchMember(user.teamCode, name);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Sse(TeamStatusEvent.EVENT_NAME)
-  async sseTeamStatus(@User() user: UserEntity) {
-    // 1. 팀의 현재 상태를 가져오는 로직
-    const currentStatus = await this.teamService.getCurrentTeamStatus(
-      user.teamCode,
-    );
-
-    // 2. 현재 상태를 포함한 SSE 스트림 반환
-    return this.teamTrackingService.streamTeamStatus(user.teamCode).pipe(
-      startWith({ data: currentStatus }), // 현재 상태를 스트림의 첫 이벤트로 설정
-      map((status) => ({ data: status })), // 이후 업데이트를 스트림으로 전송
-    );
   }
 
   // 글을 수정하는 버튼을 눌렀을 떄에 발생하는 코드로
