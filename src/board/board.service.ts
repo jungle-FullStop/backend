@@ -84,6 +84,18 @@ export class BoardService {
       .getRawMany();
   }
 
+  async findOneForDateByBoardID(boardId: number): Promise<Board> {
+    return await this.boardRepository
+      .createQueryBuilder('board')
+      .andWhere('id = :boardId', { boardId })
+      .select('MAX(board.id) as id')
+      .addSelect('board.userId as userId')
+      .addSelect('MAX(board.title) as title')
+      .addSelect('MAX(board.contents) as contents')
+      .addSelect('MAX(board.timestamp) as timestamp')
+      .getRawOne();
+  }
+
   async updateBoard(userId: number, boardId: number, contents: string) {
     await this.boardRepository.update(
       { userId: userId, id: boardId },
