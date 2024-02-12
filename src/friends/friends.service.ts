@@ -121,6 +121,9 @@ export class FriendsService {
       };
     });
 
+    // 내 정보 추가
+    friends.push(await this.usersRepository.findById(userId));
+
     return this.sortByRank(friends);
   }
 

@@ -47,6 +47,15 @@ export class BoardController {
     return { user: { profileImage, name }, boards };
   }
 
+  @Get('/find/detail/:boardId') // 해당 userId 전체 Til
+  async findByBoardId(@Param('boardId') boardId: number) {
+    const board = await this.boardService.findOneForDateByBoardID(boardId);
+    const user = await this.userService.findUserById(board.userId);
+    const profileImage = user.profileImage;
+    const name = user.name;
+    return { user: { profileImage, name }, board };
+  }
+
   @Patch('/update')
   async updateBoard(@Body() boardUpdateDto: BoardUpdateDto) {
     const userId = boardUpdateDto.userId;
