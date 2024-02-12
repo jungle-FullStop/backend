@@ -72,15 +72,20 @@ export class BoardService {
   }
 
   async findOneForDate(userId: number): Promise<Board[]> {
+    const subQuery = this.boardRepository
+      .createQueryBuilder('board')
+      .select('MAX(board.id) as id')
+      .groupBy('DATE(board.timestamp)'); // 날짜별로 그룹화
+
     return await this.boardRepository
       .createQueryBuilder('board')
       .where('userId = :userId', { userId })
-      .groupBy('DATE(board.timestamp)') // 날짜별로 그룹화
-      .select('MAX(board.id) as id')
+      .innerJoin(`(${subQuery.getQuery()})`, 'sub', 'board.id = sub.id')
+      .select('board.id as id')
       .addSelect('board.userId')
-      .addSelect('MAX(board.title) as title')
-      .addSelect('MAX(board.contents) as contents')
-      .addSelect('MAX(board.timestamp) as timestamp')
+      .addSelect('board.title as title')
+      .addSelect('board.contents as contents')
+      .addSelect('board.timestamp as timestamp')
       .getRawMany();
   }
 
@@ -88,11 +93,11 @@ export class BoardService {
     return await this.boardRepository
       .createQueryBuilder('board')
       .andWhere('id = :boardId', { boardId })
-      .select('MAX(board.id) as id')
+      .select('board.id as id')
       .addSelect('board.userId as userId')
-      .addSelect('MAX(board.title) as title')
-      .addSelect('MAX(board.contents) as contents')
-      .addSelect('MAX(board.timestamp) as timestamp')
+      .addSelect('board.title as title')
+      .addSelect('board.contents as contents')
+      .addSelect('board.timestamp as timestamp')
       .getRawOne();
   }
 
