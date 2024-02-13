@@ -19,7 +19,7 @@ export class HistoryController {
     // console.log('USER : ', user);
     // console.log('EXTENSION HISTORY : ', extensionHistoryDto);
     extensionHistoryDto.userId = user.id.toString();
-    await this.service.handleExtensionHistory(extensionHistoryDto);
+    return await this.service.handleExtensionHistory(extensionHistoryDto);
   }
 
   @Get('/history')
