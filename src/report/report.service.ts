@@ -15,7 +15,11 @@ export class ReportService {
   ) {}
 
   async findById(userId: number, fromDate: Date): Promise<Report> {
-    return await this.reportRepository.findById(userId);
+    return await this.reportRepository.findOne({
+      where: { userId },
+      order: { timestamp: 'DESC' }, // timestamp를 기준으로 내림차순 정렬
+      select: { report: true },
+    });
   }
 
   async createSaveReport(userId: number, fromDate: Date): Promise<Report> {
@@ -35,7 +39,11 @@ export class ReportService {
     // 결과 반환
     const report = await this.chatservice.getReport(data);
 
-    return await this.reportRepository.saveReport(report.aiMessage, fromDate);
+    return await this.reportRepository.saveReport(
+      userId,
+      report.aiMessage,
+      fromDate,
+    );
   }
   // create(createReportDto: CreateReportDto) {
   //   return 'This action adds a new report';
