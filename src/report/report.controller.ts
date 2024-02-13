@@ -12,7 +12,6 @@ export class ReportController {
   @UseGuards(JwtAuthGuard)
   async findById(@User() user: UserEntity) {
     const fromDate = new Date();
-    // console.log(fromDate);
     fromDate.setHours(0, 0, 0, 0);
     return await this.reportService.findById(user.id, fromDate);
   }
@@ -21,7 +20,6 @@ export class ReportController {
   @UseGuards(JwtAuthGuard)
   async createSaveReport(@User() user: UserEntity) {
     const fromDate = new Date();
-    // console.log(fromDate);
     return await this.reportService.createSaveReport(user.id, fromDate);
   }
 }

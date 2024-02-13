@@ -25,23 +25,17 @@ export class ReportRepository extends Repository<Report> {
   //     // return latestreport.report;
   // }
 
-  async findById(userId: number): Promise<Report> {
-    const latestReport = await this.findOne({
-      where: { userId },
-      order: { timestamp: 'DESC' }, // timestamp를 기준으로 내림차순 정렬
-      select: { report: true },
-    });
-
-    return latestReport;
-  }
-
-  async saveReport(report: string, fromDate: Date): Promise<Report> {
+  async saveReport(
+    userId: number,
+    report: string,
+    fromDate: Date,
+  ): Promise<Report> {
     const reportRecord = this.create({
-      userId: 1,
+      userId: userId,
       report: report,
       timestamp: fromDate,
     });
-    this.save(reportRecord);
+    await this.save(reportRecord);
     return reportRecord;
   }
 }
