@@ -57,7 +57,9 @@ export class TeamRepository extends Repository<Team> {
       .distinct(true)
       .getMany();
 
-    return writtenUsers.map((user) => user.userId);
+    console.log(writtenUsers);
+    console.log(Array.from(new Set(writtenUsers.map((user) => user.userId))));
+    return Array.from(new Set(writtenUsers.map((user) => user.userId)));
   }
 
   async getMyTeamUsers(teamCode: string) {

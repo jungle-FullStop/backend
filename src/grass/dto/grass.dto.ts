@@ -5,3 +5,9 @@ export class GrassDto {
   @IsNotEmpty()
   date: Date;
 }
+
+export class GrassStreamDto {
+  // userId: number;
+  grass: number;
+  teamCode: string;
+}
