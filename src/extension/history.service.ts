@@ -27,7 +27,7 @@ export class HistoryService {
       )
       .getOne();
     if (checkDup) {
-      return;
+      return { result: 'duplicate' };
     }
 
     const aiData = await this.chatService.processExtenstionData(dto);
@@ -42,6 +42,8 @@ export class HistoryService {
       processedTitle: processTitle,
       processedData: processData,
     });
+
+    return { result: 'ok' };
   }
 
   preprocess(tags: string): string {

@@ -5,12 +5,16 @@ import { EventEmitter2 } from '@nestjs/event-emitter';
 import { TeamStatusEvent } from '../team/events/team-status.event';
 import { TeamStreamDto } from '../team/dto/team.dto';
 import { UsersRepository } from '../users/users.repository';
+import { GrassStreamDto } from 'src/grass/dto/grass.dto';
+import { GrassStatusEvent } from 'src/grass/events/grass-status.event';
+import { TeamRepository } from 'src/team/team.repository';
 
 @Injectable()
 export class BoardService {
   constructor(
     private boardRepository: BoardRepository,
     private usersRepository: UsersRepository,
+    private teamRepository: TeamRepository,
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
@@ -31,13 +35,24 @@ export class BoardService {
     const score = (await this.findByMonth(userId, today)).length;
     await this.usersRepository.updateTilScore(userId, score);
 
-    const streamDTO: TeamStreamDto = {
+    const teamStreamDTO: TeamStreamDto = {
       userId,
       status: 'written', // 또는 상태를 업데이트합니다.
       teamCode: teamCode,
     };
 
-    this.eventEmitter.emit(TeamStatusEvent.EVENT_NAME, streamDTO);
+    this.eventEmitter.emit(TeamStatusEvent.EVENT_NAME, teamStreamDTO);
+
+    const grassStreamDTO: GrassStreamDto = {
+      // userId,
+
+      grass:
+        await this.teamRepository.getWrittenUserIdsPercentageByTeamCode(
+          teamCode,
+        ),
+      teamCode: teamCode,
+    };
+    this.eventEmitter.emit(GrassStatusEvent.EVENT_NAME, grassStreamDTO);
   }
 
   async findAll(): Promise<Board[]> {
