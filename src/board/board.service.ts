@@ -45,7 +45,8 @@ export class BoardService {
 
     const grassStreamDTO: GrassStreamDto = {
       // userId,
-
+      count: (await this.teamRepository.getWrittenUserIdsByTeamCode(teamCode))
+        .length,
       grass:
         await this.teamRepository.getWrittenUserIdsPercentageByTeamCode(
           teamCode,
