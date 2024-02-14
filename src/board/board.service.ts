@@ -96,6 +96,7 @@ export class BoardService {
 
     return await this.boardRepository
       .createQueryBuilder('board')
+      .where('userId = :userId', { userId })
       .innerJoin(`(${subQuery.getQuery()})`, 'sub', 'board.id = sub.id')
       .select('board.id as id')
       .addSelect('board.userId')
