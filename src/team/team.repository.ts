@@ -57,8 +57,6 @@ export class TeamRepository extends Repository<Team> {
       .distinct(true)
       .getMany();
 
-    // console.log(writtenUsers);
-    // console.log(Array.from(new Set(writtenUsers.map((user) => user.userId))));
     return Array.from(new Set(writtenUsers.map((user) => user.userId)));
   }
 
@@ -75,17 +73,33 @@ export class TeamRepository extends Repository<Team> {
       .where('user.teamCode = :teamCode', { teamCode })
       .getCount();
 
-    const writtenUsersCount = await this.dataSource
+    // const writtenUsersCount = await this.dataSource
+    //   .getRepository(Board)
+    //   .createQueryBuilder('board')
+    //   .leftJoin('board.user', 'user')
+    //   .where('user.teamCode = :teamCode', { teamCode })
+    //   .andWhere('board.timestamp BETWEEN :start AND :end', {
+    //     start: todayStart,
+    //     end: todayEnd,
+    //   })
+    //   .select('DISTINCT board.userId')
+    //   .getCount();
+    const writtenUsers = await this.dataSource
       .getRepository(Board)
       .createQueryBuilder('board')
-      .leftJoin('board.user', 'user')
+      .leftJoinAndSelect('board.user', 'user')
       .where('user.teamCode = :teamCode', { teamCode })
       .andWhere('board.timestamp BETWEEN :start AND :end', {
         start: todayStart,
         end: todayEnd,
       })
-      .select('DISTINCT board.userId')
-      .getCount();
+      .select('board.userId')
+      .distinct(true)
+      .getMany();
+
+    const writtenUsersCount = Array.from(
+      new Set(writtenUsers.map((user) => user.userId)),
+    ).length;
 
     const writtenUserPercentage = (writtenUsersCount / totalUsersCount) * 100;
     return writtenUserPercentage;
