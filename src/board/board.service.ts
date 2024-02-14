@@ -45,8 +45,11 @@ export class BoardService {
 
     const grassStreamDTO: GrassStreamDto = {
       // userId,
-      grass: (await this.teamRepository.getWrittenUserIdsByTeamCode(teamCode))
-        .length,
+
+      grass:
+        await this.teamRepository.getWrittenUserIdsPercentageByTeamCode(
+          teamCode,
+        ),
       teamCode: teamCode,
     };
     this.eventEmitter.emit(GrassStatusEvent.EVENT_NAME, grassStreamDTO);

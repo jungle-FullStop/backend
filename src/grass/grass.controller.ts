@@ -7,7 +7,7 @@ import { User as UserEntity } from '../users/entity/user.entity';
 import { GrassDto } from './dto/grass.dto';
 import { GrassStatusEvent } from './events/grass-status.event';
 // import { TeamTrackingService } from '@app/teamtracking';
-import { map, startWith } from 'rxjs';
+// import { map, startWith } from 'rxjs';
 import { GrassTrackingService } from 'libs/grasstracking/src';
 import { TeamRepository } from 'src/team/team.repository';
 
@@ -36,7 +36,6 @@ export class GrassController {
   @Post('/team') // 팀 해당월 잔디용
   @UseGuards(JwtAuthGuard)
   async findTeamGrass(@Body() grassDto: GrassDto, @User() user: UserEntity) {
-    // const user = await this.userService.findUserById(userId);
     const teamMember = await this.teamService.findMemberList(user.teamCode);
     const teamBoard = [];
     for (const user of teamMember) {
@@ -47,12 +46,17 @@ export class GrassController {
         userId,
         new Date(grassDto.date),
       );
-      // const writeId = boards
-      // const count =
-      console.log(boards);
+
       teamBoard.push({ user: { profileImage, name }, boards });
     }
-    return teamBoard;
+    console.log(teamBoard);
+    const totalMember = teamMember.length;
+    const teamBoardWithCount = [
+      { teamBoard: teamBoard, totalMember: totalMember },
+    ];
+    // teamBoard.push(totalMember);
+    console.log(teamBoardWithCount);
+    return teamBoardWithCount;
   }
 
   @UseGuards(JwtAuthGuard)
