@@ -8,6 +8,7 @@ export class GrassDto {
 
 export class GrassStreamDto {
   // userId: number;
+  count: number;
   grass: number;
   teamCode: string;
 }
