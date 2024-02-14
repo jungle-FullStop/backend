@@ -1,4 +1,4 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { MindmapService } from './mindmap.service';
 import { JwtAuthGuard } from '../auth/guards/jwtAuth.guard';
 import { User } from '../users/utils/user.decorator';
