@@ -103,8 +103,7 @@ export class MindmapService {
           id: edge,
           source: temp[0],
           target: temp[1],
-          cnt:
-            String(Math.round((edgeKeywords[edge] / TOTALHISTORY) * 100)) + '%',
+          cnt: Math.round((edgeKeywords[edge] / TOTALHISTORY) * 100),
         },
       });
     }
