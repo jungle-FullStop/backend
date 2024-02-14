@@ -90,6 +90,7 @@ export class BoardService {
   async findOneForDate(userId: number): Promise<Board[]> {
     const subQuery = this.boardRepository
       .createQueryBuilder('board')
+      .where('userId = :userId', { userId })
       .select('MAX(board.id) as id')
       .groupBy('DATE(board.timestamp)'); // 날짜별로 그룹화
 
