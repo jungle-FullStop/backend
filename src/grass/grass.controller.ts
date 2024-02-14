@@ -49,25 +49,17 @@ export class GrassController {
 
       teamBoard.push({ user: { profileImage, name }, boards });
     }
-    console.log(teamBoard);
     const totalMember = teamMember.length;
-    const teamBoardWithCount = [
-      { teamBoard: teamBoard, totalMember: totalMember },
-    ];
-    // teamBoard.push(totalMember);
-    console.log(teamBoardWithCount);
+    const teamBoardWithCount = {
+      teamBoard: teamBoard,
+      totalMember: totalMember,
+    };
     return teamBoardWithCount;
   }
 
   @UseGuards(JwtAuthGuard)
   @Sse(GrassStatusEvent.EVENT_NAME)
   async sseTeamGrassStatus(@User() user: UserEntity) {
-    // const firstStatus = {
-    //   grass: (
-    //     await this.teamRepository.getWrittenUserIdsByTeamCode(user.teamCode)
-    //   ).length,
-    //   teamCode: user.teamCode,
-    // };
     return this.grassTrackingService.streamTeamStatus(user.teamCode);
   }
 }
