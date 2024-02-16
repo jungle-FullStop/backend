@@ -95,15 +95,23 @@ export class MindmapService {
       Object.entries(relations).filter(([, value]) => value >= 2),
     );
 
+    // 코사인 유사도 계산식
+    const cosineSimilarity = (relation: string, items: string[]) => {
+      const px = nodeKeywords[items[0]] / TOTALHISTORY;
+      const py = nodeKeywords[items[1]] / TOTALHISTORY;
+      const pxy = edgeKeywords[relation] / TOTALHISTORY;
+      return ((pxy / (Math.sqrt(px) * Math.sqrt(py))) * 100).toPrecision(4);
+    };
+
     // 엣지 생성
     for (const edge in edgeKeywords) {
-      const temp = edge.split('-');
+      const items = edge.split('-');
       edges.push({
         data: {
           id: edge,
-          source: temp[0],
-          target: temp[1],
-          cnt: Math.round((edgeKeywords[edge] / TOTALHISTORY) * 100),
+          source: items[0],
+          target: items[1],
+          cnt: cosineSimilarity(edge, items),
         },
       });
     }
