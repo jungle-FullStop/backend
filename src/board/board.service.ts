@@ -41,7 +41,7 @@ export class BoardService {
       teamCode: teamCode,
     };
 
-    this.eventEmitter.emit(TeamStatusEvent.EVENT_NAME, teamStreamDTO);
+    // this.eventEmitter.emit(TeamStatusEvent.EVENT_NAME, teamStreamDTO);
 
     const grassStreamDTO: GrassStreamDto = {
       // userId,

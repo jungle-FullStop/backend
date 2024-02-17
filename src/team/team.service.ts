@@ -56,9 +56,21 @@ export class TeamService {
     this.eventEmitter.emit(TeamStatusEvent.EVENT_NAME, streamDTO);
   }
 
+  async refreshTeamMemberStatus(user_entity: UserEntity) {
+    await this.teamRepository.saveTeamStatusListInRedis(
+      user_entity.teamCode,
+      user_entity.id,
+    );
+  }
+
   async getCurrentTeamStatus(teamCode: string): Promise<any> {
     // 팀 상태를 레디스에서 조회하는 로직
-    return await this.teamRepository.getTeamStatusListFromRedis(teamCode);
+    const userList = await this.teamRepository.getTeamUserList(teamCode);
+
+    return await this.teamRepository.getTeamStatusListFromRedis(
+      teamCode,
+      userList,
+    );
   }
 
   async createTeam(
@@ -102,7 +114,19 @@ export class TeamService {
   }
 
   async findMemberRankList(teamCode: string) {
-    const members = await this.teamRepository.getMyTeamUsers(teamCode);
+    let members = await this.teamRepository.getMyTeamUsers(teamCode);
+    const currentRedisStatus = await this.getCurrentTeamStatus(teamCode);
+
+    members = members.map((user) => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      status: currentRedisStatus[user.id] ? 'writing' : user.status,
+      profileImage: user.profileImage,
+      tilScore: user.tilScore,
+      // Include any other fields you need here...
+    }));
+
     return this.sortByRank(members);
   }
 

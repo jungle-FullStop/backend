@@ -116,6 +116,12 @@ export class TeamController {
     return { message: 'Writing started.' };
   }
 
+  @Post('refresh')
+  @UseGuards(JwtAuthGuard)
+  async refreshTeamMemberStatus(@User() user: UserEntity) {
+    return await this.teamService.refreshTeamMemberStatus(user);
+  }
+
   @UseGuards(JwtAuthGuard)
   @Post('change-status')
   async changeStatus(@User() user: UserEntity, @Body('status') status: string) {
