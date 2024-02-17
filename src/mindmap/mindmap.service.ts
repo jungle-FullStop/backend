@@ -95,15 +95,23 @@ export class MindmapService {
       Object.entries(relations).filter(([, value]) => value >= 2),
     );
 
+    // 코사인 유사도 계산식
+    const cosineSimilarity = (relation: string, items: string[]) => {
+      const px = nodeKeywords[items[0]] / TOTALHISTORY;
+      const py = nodeKeywords[items[1]] / TOTALHISTORY;
+      const pxy = edgeKeywords[relation] / TOTALHISTORY;
+      return ((pxy / (Math.sqrt(px) * Math.sqrt(py))) * 100).toPrecision(4);
+    };
+
     // 엣지 생성
     for (const edge in edgeKeywords) {
-      const temp = edge.split('-');
+      const items = edge.split('-');
       edges.push({
         data: {
           id: edge,
-          source: temp[0],
-          target: temp[1],
-          cnt: Math.round((edgeKeywords[edge] / TOTALHISTORY) * 100),
+          source: items[0],
+          target: items[1],
+          cnt: cosineSimilarity(edge, items),
         },
       });
     }
@@ -128,8 +136,8 @@ export class MindmapService {
     if (selectNumber === 1) return arr.map((value) => [value]); // 1개씩 택할 때, 바로 모든 배열의 원소 return
 
     arr.forEach((fixed, index, origin) => {
-      const rest = origin.slice(index + 1); // 해당하는 fixed를 제외한 나머지 뒤
-      const combinations = this.getCombination(rest, selectNumber - 1); // 나머지에 대해서 조합을 구한다.
+      const rest = origin.slice(index + 1); // 해당하는 fixed 제외한 나머지 뒤
+      const combinations = this.self(rest, selectNumber - 1); // 나머지에 대해서 조합을 구한다.
       const attached = combinations.map((combination: string[]) => [
         fixed,
         ...combination,

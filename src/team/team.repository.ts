@@ -17,26 +17,52 @@ export class TeamRepository extends Repository<Team> {
 
   async getTeamStatusListFromRedis(
     teamId: string,
+    userList: number[], // Assuming user IDs are numeric
   ): Promise<Record<number, string>> {
-    const statusListString = await this.redisService.get(
-      `team_${teamId}_status`,
-    );
-    return statusListString ? JSON.parse(statusListString) : {};
+    const teamStatusList: Record<number, string> = {};
+
+    for (const userId of userList) {
+      const key = `team_${teamId}_${userId}`;
+      const status = await this.redisService.get(key);
+      if (status) {
+        teamStatusList[userId] = 'writing';
+      }
+    }
+
+    return teamStatusList;
   }
 
   // 레디스에 업데이트된 팀 상태 리스트를 저장하는 메서드
   async saveTeamStatusListInRedis(
-    teamId: string,
-    statusList: Record<number, string>,
+    teamId: number | string,
+    userCode: number,
   ): Promise<void> {
-    const ttl = this.calculateSecondsUntilMidnight();
+    const ttl = 180;
 
     await this.redisService.set(
-      `team_${teamId}_status`,
-      JSON.stringify(statusList),
+      `team_${teamId}_${userCode}`,
+      'writing',
       'EX', // EX 옵션은 TTL을 초 단위로 설정합니다.
       ttl,
     );
+  }
+
+  async deleteTeamUserStatus(
+    teamId: number | string,
+    userCode: number,
+  ): Promise<void> {
+    await this.redisService.del(`team_${teamId}_${userCode}`);
+  }
+
+  async getTeamUserList(teamCode: string) {
+    const userList = await this.dataSource
+      .getRepository(User)
+      .createQueryBuilder('user')
+      .where('teamCode = :teamCode', { teamCode })
+      .select('user.id')
+      .getMany();
+
+    return Array.from(new Set(userList.map((user) => user.id)));
   }
 
   async getWrittenUserIdsByTeamCode(teamCode: string): Promise<number[]> {
