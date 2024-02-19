@@ -137,7 +137,7 @@ export class MindmapService {
 
     arr.forEach((fixed, index, origin) => {
       const rest = origin.slice(index + 1); // 해당하는 fixed 제외한 나머지 뒤
-      const combinations = this.self(rest, selectNumber - 1); // 나머지에 대해서 조합을 구한다.
+      const combinations = this.getCombination(rest, selectNumber - 1); // 나머지에 대해서 조합을 구한다.
       const attached = combinations.map((combination: string[]) => [
         fixed,
         ...combination,
