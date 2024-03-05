@@ -1,10 +1,12 @@
 <div align="center">
-<a href="https://teamby.team/">
-<img width="150px" src="https://github.com/jungle-FullStop/frontend/blob/main/public/logo.png" alt="팀바팀 이동하기"/>
+<a href="https://tilfullstop.site/">
+<img width="150px" src="https://github.com/jungle-FullStop/frontend/blob/main/public/logo.png" alt="티나끝 이동하기"/>
 </a>
 
 
 [![](https://img.shields.io/badge/-FullStop-important?style=flat&logo=airplayvideo&logoColor=white&labelColor=black&color=%FFFF00)](https://tilfullstop.site/home)
+[![](https://img.shields.io/badge/-FullStop_Extension-important?style=flat&logo=angellist&logoColor=balck&labelColor=black&color=white)
+](https://chromewebstore.google.com/detail/%ED%8B%B0%EB%82%98%EB%81%9D-til-%EC%9E%91%EC%84%B1%EB%8F%84%EC%9A%B0%EB%AF%B8/iippaokmojjmpmgcpidfeniaodkbpphl?hl=ko&authuser=0)
 
 
 
