@@ -7,9 +7,12 @@
 [![](https://img.shields.io/badge/-FullStop-important?style=flat&logo=airplayvideo&logoColor=white&labelColor=black&color=%FFFF00)](https://tilfullstop.site/home)
 
 
+
 # 티나끝
 
 ### ✨ TIL을 쓰지 않으면 나의 하루는 끝나지 않는다, 티나끝 ✨
+
+<div align="left">
 
 ## 🗨️ About 티나끝
 
@@ -32,5 +35,7 @@
   - 학습의 동기를 부여하고, 스스로에게 성취감을 주는 중요한 요소입니다.
 
 티나끝과 함께라면, 개발자로서의 여정을 더욱 풍부하고 가치 있게 만들 수 있습니다. 여러분의 개발 학습 과정을 지원하고, 새로운 지식을 효과적으로 정리하며, 동료들과 함께 성장할 수 있는 기회를 제공합니다.
+
+</div>
 
 ## 🖥️ Service
