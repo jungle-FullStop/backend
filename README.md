@@ -98,7 +98,7 @@
   <tr>
     <td align="center">
       <a href="https://github.com/YellaCRE" target="_blank">
-        황창조(팀장)
+        황창조(리더)
       </a>
     </td>
      <td align="center">
