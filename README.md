@@ -60,3 +60,63 @@
 |                                                     <b>팀잔디</b>                                                      |                                                <b>익스텐션</b>                                                |
 | <img src='https://github.com/jungle-FullStop/frontend/blob/main/public/logo.png'> | <img src='https://github.com/jungle-FullStop/frontend/blob/main/public/logo.png'> |
 
+
+## 👻 Member
+
+<table>
+<tr>
+<td align="center"> 마인드맵, 레퍼런스 검색기능 </td>
+<td align="center"> 백그라운드 알림, TIL 가이드라인 </td>
+<td align="center"> 게시판 기능, 애니메이션 효과 </td>
+<td align="center"> 실시간 상태확인, 서버배포, 익스텐션 </td>
+</tr>
+  <tr>
+    <td align="center" width="120px">
+      <a href="https://github.com/YellaCRE" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/76480887?v=4" alt="황창조 프로필" />
+      </a>
+    </td>
+    <td align="center" width="120px">
+      <a href="https://github.com/gun9311" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/147376710?v=4" alt="박건률 프로필" />
+      </a>
+    </td>
+    <td align="center" width="120px">
+      <a href="https://github.com/junhee1203" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/147376710?v=4" alt="정준희 프로필" />
+      </a>
+    </td>
+    <td align="center" width="120px">
+      <a href="https://github.com/ParkJJungmIn" target="_blank">
+        <img src="https://avatars.githubusercontent.com/u/61037158?v=4" alt="박정민 프로필" />
+      </a>
+    </td>
+    
+  </tr>
+  <tr>
+    <td align="center">
+      <a href="https://github.com/YellaCRE" target="_blank">
+        황창조(팀장)
+      </a>
+    </td>
+     <td align="center">
+      <a href="https://github.com/gun9311" target="_blank">
+       박건률
+      </a>
+    </td> 
+     <td align="center">
+      <a href="https://github.com/junhee1203" target="_blank">
+       정준희
+      </a>
+       <td align="center">
+      <a href="https://github.com/ParkJJungmIn" target="_blank">
+        박정민
+      </a>
+    </td>
+  </tr>
+</table>
+
+
+## 발표 포스터
+
+<img width="600px" src='https://github.com/jungle-FullStop/frontend/blob/main/public/images/fullstop_post.jpg'  alt="장표"/>
