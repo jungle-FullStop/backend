@@ -1,3 +1,5 @@
+### 서비스 소개
+https://github.com/jungle-FullStop
 
 ### 프로젝트 설정 및 실행 절차
 
