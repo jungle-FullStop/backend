@@ -1,73 +1,46 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## 티나끝 서비스 소개
+https://github.com/jungle-FullStop
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+  
+## 프로젝트 설정 및 실행 절차
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+#### 1. 환경 변수 파일(.env) 생성
 
-## Description 테스트3
+프로젝트 디렉토리의 루트에 `.env` 파일을 생성하고, 아래의 정보를 입력합니다. Google Firebase API 정보와 OpenAI Key 정보를 포함하여 필요한 환경 변수들을 설정해주세요.
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ npm install
+```
+DB_HOST=localhost
+DB_PORT=3306
+DB_USER=user
+DB_PASS=password
+DB_NAME=db
+OPENAI_KEY=<여기에 OpenAI Key 입력>
+JWT_SECRET=<여기에 JWT 비밀키 입력>
+GOOGLE_CLIENT_ID=<여기에 Google Client ID 입력>
+GOOGLE_CLIENT_SECRET=<여기에 Google Client Secret 입력>
+GOOGLE_REDIRECT_URL=http://localhost:5173/auth
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=kjungle3!
 ```
 
-## Running the app
+#### 2. Docker Compose를 사용한 가상 환경 생성
+
+Redis와 MySQL을 포함하는 가상 환경을 생성하기 위해, 프로젝트 디렉토리에서 다음 명령어를 실행합니다.
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+docker compose up
 ```
 
-## Test
+이 명령은 `docker-compose.yml` 파일에 정의된 서비스들을 기반으로 가상 환경을 생성하고 실행합니다.
+
+#### 3. 서버 실행
+
+가상 환경이 성공적으로 생성되고 나면, 다음과 같이 npm 스크립트를 사용하여 개발 서버를 실행합니다.
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run dev
 ```
 
-## Support
+이 명령어는 개발 모드에서 서버를 시작합니다. 서버가 정상적으로 작동하는지 확인하기 위해서 localhost:3000 를 호출해서 정상적으로 되는지 확인합니다.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).

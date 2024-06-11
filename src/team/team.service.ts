@@ -127,6 +127,10 @@ export class TeamService {
       // Include any other fields you need here...
     }));
 
+    if (members.length >= 6) {
+      return this.sortByRank(members.slice(0, 6));
+    }
+
     return this.sortByRank(members);
   }
 
